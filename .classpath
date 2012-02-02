@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/work/workspace/ActivityWatch/swingx-core-1.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Oracle/JavaFX 2.0 Runtime/lib/jfxrt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

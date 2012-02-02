@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+"
+	codebase="http://www.bra-vo.de/activitywatch"
+	href="ActivityWatch.jnlp"
+	version="0.8">
+	<information>
+  		<title>ActivityWatch</title>
+  		<vendor>Volker Braun</vendor>
+  		<homepage href="http://www.bra-vo.de/activitywatch/" />
+  		<description>A time control tool</description>
+      <offline-allowed />
+      <shortcut online="false">
+        <desktop/>
+        <menu submenu="ActivityWatch"/>
+      </shortcut>	
+   </information>
+
+	<security>
+		<all-permissions />
+	</security>
+
+	<resources>
+		<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
+		<jar href="ActivityWatch.jar" version="0.8" main="true" />
+		<property name="jnlp.versionEnabled" value="true"/>
+		<jar href="ActivityWatch_lib/swingx-core-1.6.2.jar" version="1.6.2" main="false" />
+	</resources>
+
+	<application-desc name="ActivityWatch" main-class="org.bravo.activitywatch.ActivityWatch" />
+	<update check="timeout" />
+</jnlp>

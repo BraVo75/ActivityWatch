@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: org/bravo/activitywatch/ActivityWatch
+Created-By: 1.6.0_18 (Sun Microsystems Inc.)
+

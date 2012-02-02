@@ -1,0 +1,48 @@
+TODOs:
+
+*   Styles umschalten
+0.5 Bug: Beim 1. Mal starten werden die neuen Aktivitäten nicht angezeigt
+0.5 Counter ausblenden
+*   Sekunden ausblenden
+0.5 Manuelles zwischenspeichern. Evtl über Menü
+0.5 Statusleiste
+0.5 Always on Top
+0.5 Textfeld markieren mit "Neue Aktivität" oder so
+0.5 Tooltips für umbenennen und löschen und stop-button
+0.5 Icons
+0.5 Beenden über Menü
+0.7 Updatefunktion (Webstart)
+0.7 Java WebStart
+0.5 Settings in AWStore
+0.5 Versionierung von AWStore
+*   Drucken - welche tage sollen gedruckt werden? alle? woche?
+*   Tagessumme (abschaltbar)
+*   Counter in Zwischenablage
+0.5 Bug: Falsche Tooltips bei Aktivitätenbuttons. Evtl. fehlendes update bei rename
+*   Meldung bei Zeitgrenze
+*   Nicht den Button sondern Zeilenhintergrund vom Timer einfärben
+0.5 Meldung beim 1. Start (kaffee zum büro - nur POI)
+*   Touch-Version
+0.5 Aktivitäten-Stop Verhalten bei Seitenwechel u. Umbenennen usw. überdenken
+0.5 Beim Versionswechsel o. 1. Start Changelist der aktuellen Version
+*   Mehr Statusnachrichten
+0.5 Bei keinem aktiven Timer den Stop-Button disablen
+0.6 Beim Rename Eingabefeld mit altem Text vorbelegen
+0.6 Beim click auf eine aktive Aktivität sollte diese wieder gestoppt werden
+*   Kommen/Gehen Zeit
+*   Play Zeichen blinken wenn aktiv. Besonders praktisch wenn sek ausgeblendet.
+*   Geile Styles und geiles Layout
+*	Bug: Aktivitäten bekommen das falsche Datum beim Speichern!?
+0.6 Sicherheitsabfrage, wenn man eine Aktivität nicht für den aktuellen Tag anlegen will
+*	Automatisches zwischenspeichern
+0.6	Fehlermeldungen wenn's beim Laden/Speichern nicht klappt
+0.8 Sprung zum aktuellen Tag
+*	Durchgängig UTF8 verwenden wg. Betriebssysteminkompatibilitäten
+*	Fensterbreite sollte ausgenutzt werden damit längere Texte lesbar sind
+0.7 Für Webstart AWStore fix ins Home Verzeichnis des Users. Override per cmdl-param
+0.8	Minimieren in Tray-Icon
+*	Beim Tageswechsel Counter nicht anhalten
+*   Beim OS Shutdown wird nicht zuverlässig gespeichert
+*	Featurelist im About Dialog anzeigen
+*   Beim neuen Einträgen zeitwert (1h) mit angeben, der dann auf den counter gerechnet wird. counter dann nicht aktivieren
+*   TEF ss (und was bekomme ich dafür?)
