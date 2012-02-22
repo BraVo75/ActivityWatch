@@ -46,3 +46,15 @@ TODOs:
 *	Featurelist im About Dialog anzeigen
 *   Beim neuen Einträgen zeitwert (1h) mit angeben, der dann auf den counter gerechnet wird. counter dann nicht aktivieren
 *   TEF ss (und was bekomme ich dafür?)
+*   Nur aktiven Task anzeigen. Bei Mouseover im Fenster wird das Fenster erweitert und inaktive angezeigt.
+*   In der Taskleiste / Fenstername den aktiven Task anzeigen
+*   Im Taskleistenmenü alle Task von heute anzeigen damit man dort den Task wechseln kann.
+*   Im Taskmenü "Neuen Task erstellen" der dann einfach das Fenster aktiviert und in die Eingabezeile springt.
+*   Taskicon ändern wenn ein counter aktiv oder inaktiv ist
+*   "Check for updates" selbst einbauen. 
+*   Nur noch Timer Buttons und optional laufende Zeit anzeigen. Alles innerhalb eines optisch einzigen stylischen buttons.
+*   Bei hover nach einer gewissen zeit und per symbol details als overlay einblenden. Innerhalb der Details den kompletten Text ausschreiben + Delete, Rename und Zeitkorrekturbuttons.
+*   Bei laufendem Timer oben immer eine laufende Uhr + kurzen Text anzeigen damit man auch an anderen Tagen weiß, dass gerade ein Timer läuft.
+*   Sicherheitsabfrage, wenn ein Timer != dem aktuellen Tag aktiviert werden soll.
+*   Standard + Stylisches Design
+  

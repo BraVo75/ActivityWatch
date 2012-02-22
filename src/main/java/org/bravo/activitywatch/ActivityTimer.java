@@ -23,6 +23,7 @@ import javax.swing.Timer;
  * @author Volker Braun
  *
  */
+@Deprecated
 public class ActivityTimer extends Container { // implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

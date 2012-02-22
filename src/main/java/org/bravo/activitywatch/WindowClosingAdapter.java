@@ -18,6 +18,7 @@ import javax.xml.bind.Marshaller;
  * @author Volker Braun
  *
  */
+@Deprecated
 public class WindowClosingAdapter extends WindowAdapter {
 
 	private boolean exitSystem;

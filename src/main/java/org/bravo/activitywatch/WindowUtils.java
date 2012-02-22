@@ -2,6 +2,7 @@ package org.bravo.activitywatch;
 
 import javax.swing.UIManager;
 
+@Deprecated
 public class WindowUtils {
 	public static void setNativeLookAndFeel() {
 		try {
