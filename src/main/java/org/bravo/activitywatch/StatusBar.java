@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+@Deprecated
 public class StatusBar extends Container {
 	private static final long serialVersionUID = 1L;
 	private static Timer t;

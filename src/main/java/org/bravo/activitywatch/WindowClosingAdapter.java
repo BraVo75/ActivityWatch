@@ -18,6 +18,7 @@ import javax.xml.bind.Marshaller;
  * @author Volker Braun
  *
  */
+@Deprecated
 public class WindowClosingAdapter extends WindowAdapter {
 
 	private boolean exitSystem;
@@ -45,7 +46,7 @@ public class WindowClosingAdapter extends WindowAdapter {
 	
 	public void saveActivities(AWStore store)
 	{
-		StatusBar.setMessage("Saving activities...");
+//		StatusBar.setMessage("Saving activities...");
 		JAXBContext context;
 		try {
 			context = JAXBContext.newInstance(AWStore.class);
@@ -67,7 +68,7 @@ public class WindowClosingAdapter extends WindowAdapter {
 				if( w != null ) {
 					try {
 						w.close();
-						StatusBar.setMessage("Saved "+store.getActivitiyList().size()+" activities.", 2000);
+//						StatusBar.setMessage("Saved "+store.getActivitiyList().size()+" activities.", 2000);
 					}
 					catch (Exception e){
 						e.printStackTrace();
