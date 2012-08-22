@@ -50,8 +50,6 @@ public class ActivityWatch extends Application {
 	private List<Timer> activityTimers;
 	private VBox activitiesLayout;
 
-	// UI Controls
-	
 	private TextField txt_newActivity;
 	private VBox mainLayout;
 
@@ -78,9 +76,6 @@ public class ActivityWatch extends Application {
 
 		windowClosingAdapter = new WindowClosingAdapter(true, store, storePath);
 
-		myStage = primaryStage;
-		myStage.setTitle(PRG_NAME);
-		
 		if(store != null && store.getActivitiyList() != null) {
 			showActivities();
 		}
@@ -128,8 +123,6 @@ public class ActivityWatch extends Application {
 				addActivity(txt_newActivity.getText());
 				txt_newActivity.clear();
 				txt_newActivity.requestFocus();
-				addActivity(txt_newActivity.getText());
-				txt_newActivity.clear();
 			}
 		});
 		
