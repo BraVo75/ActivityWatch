@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.bravo.activitywatch;
+package org.bravo.activitywatch.entity;
 
 import java.util.Date;
 

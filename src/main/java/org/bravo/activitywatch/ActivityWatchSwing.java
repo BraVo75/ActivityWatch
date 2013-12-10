@@ -49,6 +49,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.bravo.activitywatch.entity.AWStore;
+import org.bravo.activitywatch.entity.Activity;
 import org.jdesktop.swingx.JXDatePicker;
 
 /**
@@ -137,6 +139,7 @@ public class ActivityWatchSwing extends JFrame implements ActionListener {
 	private final ImageIcon icon_right;
 	private final ImageIcon icon_application;
 	
+	@Deprecated
 	public ActivityWatchSwing(String storePath) throws JAXBException, IOException {
 
 		icon_application = new ImageIcon(ActivityWatchSwing.class.getResource(PATH_APPICON));

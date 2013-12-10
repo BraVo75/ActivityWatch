@@ -14,6 +14,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.bravo.activitywatch.entity.AWStore;
+
 /**
  * @author Volker Braun
  *

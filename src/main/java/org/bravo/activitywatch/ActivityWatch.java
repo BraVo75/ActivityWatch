@@ -22,6 +22,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.bravo.activitywatch.entity.AWStore;
+import org.bravo.activitywatch.entity.Activity;
+
 public class ActivityWatch extends Application {
 
 	private static final String PRG_NAME = "ActivityWatch";
@@ -65,12 +68,12 @@ public class ActivityWatch extends Application {
 	    Scene scene = new Scene(mainGroup);
 
 		loadSettings();
-	    store = new AWStore();
-		settings = new Settings();
-		store.setSettings(settings);
+//	    store = new AWStore();
+//		settings = new Settings();
+//		store.setSettings(settings);
 
-		store.setActivities(new ArrayList<Activity>());
-		loadActivities();
+//		store.setActivities(new ArrayList<Activity>());
+//		loadActivities();
 
 		addUIControls();
 
@@ -180,7 +183,7 @@ public class ActivityWatch extends Application {
 			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),"Error while loading activities", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-//			System.out.println("No AWStore.xml File found. Creating new activities...");
+			System.out.println("No AWStore.xml File found. Creating new activities...");
 		}
 		if( store.getVersion() != AWSTORE_VERSION ) {
 			migrateStore();
@@ -245,7 +248,8 @@ public class ActivityWatch extends Application {
 //		myStage.sizeToScene();
 //	}
 	
-	private void loadActivities() {
+	
+//	private void loadActivities() {
 //		StatusBar.setMessage("Loading Activities...");
 //		JAXBContext context;
 //		try {
@@ -275,6 +279,6 @@ public class ActivityWatch extends Application {
 //			store.setSettings(settings);
 //		}
 //		StatusBar.setMessage("Loaded "+store.getActivitiyList().size()+" activities.", 3000);
-	}
+//	}
 
 }

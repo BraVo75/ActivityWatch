@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import org.bravo.activitywatch.entity.Activity;
+
 /**
  * @author Volker Braun
  *

@@ -1,13 +1,15 @@
 /**
  * 
  */
-package org.bravo.activitywatch;
+package org.bravo.activitywatch.entity;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.bravo.activitywatch.Settings;
 
 /**
  * @author Volker Braun
@@ -40,14 +42,14 @@ public class AWStore {
 	 * @return the version
 	 */
 	@XmlElement(name="version")
-	int getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
 	/**
 	 * @param version the version to set
 	 */
-	void setVersion(int version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 

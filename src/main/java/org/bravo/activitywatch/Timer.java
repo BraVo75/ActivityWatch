@@ -7,11 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimerTask;
 
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+
+import org.bravo.activitywatch.entity.Activity;
 
 /**
  * @author Volker
@@ -22,16 +25,15 @@ public class Timer extends Group {
 	private Button label;
 	private Activity activity;
 	private Label lbl_time;
+	private String clock;
 
 	private HBox layout;
 	
 	private Date startTime = new Date();
-//	private Timer t;
+	private java.util.Timer t;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
 	private static final String TIMER_FORMAT = "HH:mm:ss";
-
-	private boolean running = false;
 
 	public Timer(Activity activity) {
 		super();
@@ -43,7 +45,11 @@ public class Timer extends Group {
 
 		setupUIControls();
 	}
-
+	
+	public void stopTimer() {
+		t.cancel();
+	}
+	
 	private void setupUIControls() {
 		layout = new HBox();
 		getChildren().add(layout);
@@ -64,16 +70,25 @@ public class Timer extends Group {
 		long t = elapsedTime.getTimeInMillis() + activity.getElapsedMillis();
 		elapsedTime.setTimeInMillis(t);
 		lbl_time.setText(sdf.format(elapsedTime.getTime()));
+		System.out.println(sdf.format(elapsedTime.getTime()));
+//		System.out.println(sdf.format(elapsedTime.getTime()));
 	}
-
+	
 	public void start() {
-		running = true;
 //		btn_activity.setBackground(Color.CYAN);
 //		lbl_play.setIcon(playIcon);
 		startTime = new Date();
 		startTime.setTime(startTime.getTime() - activity.getElapsedMillis());
-//		t.start();
-	}
+
+		t = new java.util.Timer();
+		t.schedule(new TimerTask(){
+			public void run() {
+				System.out.println("ping:"+label.getText());
+				activity.setElapsedMillis(new GregorianCalendar().getTimeInMillis() - startTime.getTime());
+				updateTimerDisplay();
+			}
+		}, 0, 1000);	
+		}
 
 }
 
