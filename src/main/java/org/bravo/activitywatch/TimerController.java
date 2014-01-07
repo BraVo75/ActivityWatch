@@ -3,16 +3,22 @@
  */
 package org.bravo.activitywatch;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimerTask;
 
-import javafx.scene.Group;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import org.bravo.activitywatch.entity.Activity;
 
@@ -20,14 +26,18 @@ import org.bravo.activitywatch.entity.Activity;
  * @author Volker
  *
  */
-public class Timer extends Group {
+public class TimerController extends VBox {
 
-	private Button label;
-	private Activity activity;
-	private Label lbl_time;
-	private String clock;
-
-	private HBox layout;
+	@FXML private Button btn_name;
+	@FXML private Button btn_delete;
+	@FXML private Label lbl_time;
+	@FXML private Activity activity;
+	private SimpleStringProperty clock = new SimpleStringProperty("");
+	private GregorianCalendar elapsedTime;
+	private boolean timerActive = false;
+	private CoreController core = CoreController.getInstance();
+	
+	@FXML private HBox timerLayout;
 	
 	private Date startTime = new Date();
 	private java.util.Timer t;
@@ -35,46 +45,75 @@ public class Timer extends Group {
 	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
 	private static final String TIMER_FORMAT = "HH:mm:ss";
 
-	public Timer(Activity activity) {
-		super();
+	public TimerController(Activity activity) {
+		
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Timer.fxml"));
+		fxmlLoader.setRoot(this);
+		fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
+        
 		this.activity = activity;
 		
 		if( activity.getElapsedMillis() == null ) {
 			activity.setElapsedMillis(0L);
 		}
-
+		
 		setupUIControls();
+	}
+
+	@FXML
+	protected void toggleTimer(ActionEvent event) {
+		if (timerActive) {
+			stopTimer();
+		}
+		else {
+			core.stopAllTimers();
+			start();
+		}
+	}
+	
+	@FXML
+	protected void deleteTimer(ActionEvent event) {
+		System.err.println("delete doesn't work yet");
 	}
 	
 	public void stopTimer() {
-		t.cancel();
+		if (timerActive) {
+			t.cancel();
+			t.purge();
+		}
+		btn_name.setUnderline(false);
+		timerActive = false;
 	}
 	
 	private void setupUIControls() {
-		layout = new HBox();
-		getChildren().add(layout);
-		
-		label = new Button(activity.getName());
-		layout.getChildren().add(label);
-		
-		lbl_time = new Label();
-		layout.getChildren().add(lbl_time);
+		btn_name.setText(activity.getName());
+		lbl_time.textProperty().bind(clock);
 		updateTimerDisplay();
 	}
-
+	
 	private void updateTimerDisplay() {
-		GregorianCalendar elapsedTime = new GregorianCalendar();
+		elapsedTime = new GregorianCalendar();
 		elapsedTime.set(Calendar.HOUR_OF_DAY, 0);
 		elapsedTime.set(Calendar.MINUTE, 0);
 		elapsedTime.set(Calendar.SECOND, 0);
 		long t = elapsedTime.getTimeInMillis() + activity.getElapsedMillis();
 		elapsedTime.setTimeInMillis(t);
-		lbl_time.setText(sdf.format(elapsedTime.getTime()));
-		System.out.println(sdf.format(elapsedTime.getTime()));
-//		System.out.println(sdf.format(elapsedTime.getTime()));
+		Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+            	clock.setValue(sdf.format(elapsedTime.getTime()));
+            }
+        });
 	}
 	
 	public void start() {
+		btn_name.setUnderline(true);
+
 //		btn_activity.setBackground(Color.CYAN);
 //		lbl_play.setIcon(playIcon);
 		startTime = new Date();
@@ -83,13 +122,21 @@ public class Timer extends Group {
 		t = new java.util.Timer();
 		t.schedule(new TimerTask(){
 			public void run() {
-				System.out.println("ping:"+label.getText());
 				activity.setElapsedMillis(new GregorianCalendar().getTimeInMillis() - startTime.getTime());
 				updateTimerDisplay();
 			}
 		}, 0, 1000);	
-		}
+		timerActive = true;
+	}
 
+	public Activity getActivity() {
+		return activity;
+	}
+
+	public boolean isTimerActive() {
+		return timerActive;
+	}
+	
 }
 
 //	private static final long serialVersionUID = 1L;

@@ -5,6 +5,8 @@ package org.bravo.activitywatch.entity;
 
 import java.util.Date;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Activity {
 	
 	private Date startDate;
-	private String name;
+	private SimpleStringProperty name = new SimpleStringProperty("");
 	private Long elapsedMillis;
 
 	/**
@@ -33,13 +35,13 @@ public class Activity {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return name.get();
 	}
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name.set(name);
 	}
 	/**
 	 * @return the elapsedMillis
