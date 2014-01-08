@@ -84,7 +84,7 @@ public class ActivityWatchSwing extends JFrame implements ActionListener {
 				storePath = arg.replaceFirst("--settings-file=", "");;
 			}
 		}
-		WindowUtils.setNativeLookAndFeel();
+//		WindowUtils.setNativeLookAndFeel();
 		if( storePath == null)
 		{
 			storePath = System.getProperty("user.home")+File.separator+AWSTORE_XML;

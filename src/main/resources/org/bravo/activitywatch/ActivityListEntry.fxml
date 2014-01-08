@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.control.cell.*?> 
+<?import javafx.collections.*?> 
+<?import javafx.scene.control.Button?>
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
+	<HBox fx:id="timerLayout">
+		<Button fx:id="btn_name" onAction="#toggleTimer"></Button>
+		<Label fx:id="lbl_time"></Label>
+		<Button fx:id="btn_delete" onAction="#deleteTimer" text="X"></Button>
+	</HBox>
+</fx:root>

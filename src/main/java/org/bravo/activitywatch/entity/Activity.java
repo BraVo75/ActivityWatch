@@ -15,10 +15,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="activity")
 public class Activity {
 	
+	private Long id;
 	private Date startDate;
 	private SimpleStringProperty name = new SimpleStringProperty("");
 	private Long elapsedMillis;
 
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	/**
 	 * @return the startDate
 	 */

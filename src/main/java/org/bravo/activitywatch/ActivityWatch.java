@@ -37,7 +37,7 @@ public class ActivityWatch extends Application {
 	@Override
 	public void stop() throws Exception {
 		System.out.println("Closing application. Performing some actions...");
-		CoreController.getInstance().stopAllTimers(); 
+//		CoreController.getInstance().stopAllTimers(); 
 		super.stop();
 	}
 

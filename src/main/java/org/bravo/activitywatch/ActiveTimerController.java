@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimerTask;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,16 +25,16 @@ import org.bravo.activitywatch.entity.Activity;
  * @author Volker
  *
  */
-public class TimerController extends VBox {
+public class ActiveTimerController extends VBox {
 
-	@FXML private Button btn_name;
-	@FXML private Button btn_delete;
-	@FXML private Label lbl_time;
+	@FXML private Label lbl_activityName;
+	@FXML private Label lbl_activityTime;
+	@FXML private Button btn_toggleTimer;
 	@FXML private Activity activity;
+	
 	private SimpleStringProperty clock = new SimpleStringProperty("");
 	private GregorianCalendar elapsedTime;
-	private boolean timerActive = false;
-	private CoreController core = CoreController.getInstance();
+	private ActivityManager activityManager = ActivityManager.getInstance();
 	
 	@FXML private HBox timerLayout;
 	
@@ -45,9 +44,9 @@ public class TimerController extends VBox {
 	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
 	private static final String TIMER_FORMAT = "HH:mm:ss";
 
-	public TimerController(Activity activity) {
+	public ActiveTimerController() {
 		
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Timer.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ActiveTimer.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -56,22 +55,15 @@ public class TimerController extends VBox {
 			throw new RuntimeException(exception);
 		}
         
-		this.activity = activity;
-		
-		if( activity.getElapsedMillis() == null ) {
-			activity.setElapsedMillis(0L);
-		}
-		
-		setupUIControls();
+		reload();
 	}
 
 	@FXML
 	protected void toggleTimer(ActionEvent event) {
-		if (timerActive) {
+		if (activityManager.isRunning()) {
 			stopTimer();
 		}
 		else {
-			core.stopAllTimers();
 			start();
 		}
 	}
@@ -82,18 +74,23 @@ public class TimerController extends VBox {
 	}
 	
 	public void stopTimer() {
-		if (timerActive) {
-			t.cancel();
-			t.purge();
+		activityManager.stopActivity();
+		if (!activityManager.isRunning()) { 
+			btn_toggleTimer.setText("Start");
 		}
-		btn_name.setUnderline(false);
-		timerActive = false;
 	}
 	
-	private void setupUIControls() {
-		btn_name.setText(activity.getName());
-		lbl_time.textProperty().bind(clock);
-		updateTimerDisplay();
+	public void reload() { // TODO: observable bei start und stop?
+		this.activity = activityManager.getSelectedActivity();
+		
+		if (activity != null) {
+			lbl_activityName.setText(activity.getName());
+			lbl_activityTime.textProperty().bind(clock);
+			updateTimerDisplay();
+			if (activityManager.isRunning()) {
+				btn_toggleTimer.setText("Stop");
+			}
+		}
 	}
 	
 	private void updateTimerDisplay() {
@@ -101,7 +98,7 @@ public class TimerController extends VBox {
 		elapsedTime.set(Calendar.HOUR_OF_DAY, 0);
 		elapsedTime.set(Calendar.MINUTE, 0);
 		elapsedTime.set(Calendar.SECOND, 0);
-		long t = elapsedTime.getTimeInMillis() + activity.getElapsedMillis();
+		long t = elapsedTime.getTimeInMillis() + activityManager.getSelectedActivity().getElapsedMillis();
 		elapsedTime.setTimeInMillis(t);
 		Platform.runLater(new Runnable(){
             @Override
@@ -112,29 +109,8 @@ public class TimerController extends VBox {
 	}
 	
 	public void start() {
-		btn_name.setUnderline(true);
-
-//		btn_activity.setBackground(Color.CYAN);
-//		lbl_play.setIcon(playIcon);
-		startTime = new Date();
-		startTime.setTime(startTime.getTime() - activity.getElapsedMillis());
-
-		t = new java.util.Timer();
-		t.schedule(new TimerTask(){
-			public void run() {
-				activity.setElapsedMillis(new GregorianCalendar().getTimeInMillis() - startTime.getTime());
-				updateTimerDisplay();
-			}
-		}, 0, 1000);	
-		timerActive = true;
-	}
-
-	public Activity getActivity() {
-		return activity;
-	}
-
-	public boolean isTimerActive() {
-		return timerActive;
+		btn_toggleTimer.setText("Stop");
+		activityManager.startActivity(activity.getId());
 	}
 	
 }

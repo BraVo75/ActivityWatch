@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.control.cell.*?> 
+<?import javafx.collections.*?> 
+<?import javafx.scene.control.Button?>
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
+	<HBox>
+		<Button fx:id="btn_toggleTimer" onAction="#toggleTimer" text="Pause"></Button>
+		<VBox>
+			<Label fx:id="lbl_activityName"></Label>
+			<Label fx:id="lbl_activityTime"></Label>
+		</VBox>
+	</HBox>
+	<HBox>
+	</HBox>
+</fx:root>
