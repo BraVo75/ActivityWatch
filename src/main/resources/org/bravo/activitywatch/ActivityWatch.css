@@ -1,3 +1,118 @@
 .root {
+	-fx-pref-width: 550;
+	-fx-pref-height: 300;
+	-fx-min-width: 530;
+	-fx-min-height: 200;
+}
+
+.listbox {
+	-fx-alignment: center-left;
+	-fx-cell-size: 26px;
+	-fx-padding: 5 10 5 10;
+}
+
+.listbox.running {
 	-fx-background-color: lightblue;
+}
+
+#btn_delete {
+}
+
+#lst_activities {
+	-fx-pref-height: 99999;
+}
+
+#lst_activities .list-cell {
+	-fx-cell-size: 26px;
+	-fx-padding: 0 0 0 0;
+}
+
+#lst_activities .list-cell:selected .label {
+	-fx-text-fill: black;
+}
+
+#lst_activities .list-cell:odd:filled:selected:focused {
+	-fx-background-color: #fafafa;
+}
+
+#lst_activities .list-cell:even:filled:selected:focused {
+	-fx-background-color: white;
+}
+
+#lbl_time {
+}
+
+.control-box {
+}
+
+.left-box {
+	-fx-border-width: 0 1 0 0;
+	-fx-border-color: white;
+	-fx-padding: 10 10 10 10;
+	-fx-spacing: 10;
+	-fx-min-width: 311;
+}
+
+.right-box {
+	-fx-border-width: 0 0 0 1;
+	-fx-border-color: grey;
+	-fx-padding: 10 10 10 10;
+	-fx-spacing: 10;
+}
+
+#btn_toggleTimer {
+	-fx-min-width: 50;
+}
+
+.date-select {
+	-fx-spacing: 10;
+}
+
+.active-timer-box {
+	-fx-spacing: 5;
+}
+
+.timer-detail {
+	-fx-spacing: 10;
+}
+
+.time-buttons {
+	-fx-spacing: 1;
+}
+
+.time-buttons .button {
+	-fx-background-color: transparent  ;
+	-fx-font-size: 0.9em;
+	-fx-padding: 2 3 2 3;
+}
+
+.time-buttons .button:hover {
+	-fx-background-color: lightgray ;
+}
+
+.timer-labels {
+	-fx-spacing: 5;
+	-fx-alignment: center-left ;
+}
+
+#lbl_activityTime {
+	-fx-font-size:1.5em;
+}
+
+.timer-detail-button {
+	-fx-background-color: transparent;
+	-fx-text-fill: darkgrey;
+	-fx-padding: 5 0 5 5;
+}
+
+.timer-detail-button:hover {
+	-fx-text-fill: blue;
+}
+
+.listbox.running .timer-detail-button {
+	-fx-text-fill: white;
+}
+
+.listbox.running .timer-detail-button:hover {
+	-fx-text-fill: blue;
 }

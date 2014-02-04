@@ -1,69 +1,82 @@
 package org.bravo.activitywatch;
 
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import org.bravo.activitywatch.entity.Activity;
+import org.bravo.activitywatch.entity.ActivityDO;
+import org.controlsfx.dialog.Dialogs;
 
-public class MainWindowController implements Initializable {
+public class MainWindowController {
 	
 	@FXML private TextField txt_newActivity;
 	@FXML private VBox activeTimerLayout;
-	@FXML private Label lbl_selectedDate;
 	@FXML private ListView<ActivityListEntryController> lst_activities;
+	@FXML private DatePicker datePicker;
+	@FXML private HBox controlBox;
 	
-	private CoreController core = CoreController.getInstance();
 	private ActivityManager activityManager = ActivityManager.getInstance();
-	private GregorianCalendar selectedDate = new GregorianCalendar(); // TODO: locale
-	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
-	private static final String TIMER_FORMAT = "d. MMMM YYYY"; // TODO: locale
-	private SimpleStringProperty dateProperty = new SimpleStringProperty("");
+	private LocalDate selectedDate;
 	private ActiveTimerController activeTimerController = new ActiveTimerController();
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		selectedDate.setTime(new Date());
-		updateDateDisplay(selectedDate);
-		populateActivityList(activityManager.getActivities(selectedDate));
-		lbl_selectedDate.textProperty().bind(dateProperty);
+
+	@FXML
+	protected void initialize() {
+		selectedDate = LocalDate.now();
+		datePicker.setValue(selectedDate);
 		activeTimerLayout.getChildren().add(activeTimerController);
+
 	}
 
-	private void populateActivityList(List<Activity> activities) {
+	@FXML
+	protected void dateSelected(ActionEvent event) {
+		selectedDate = datePicker.getValue();
+		updateDisplay();
+	}
+	 
+	private void populateActivityList(List<ActivityDO> activities) {
 		ObservableList<ActivityListEntryController> data = lst_activities.getItems();
-		for (Activity a : activities) {
-			data.add(new ActivityListEntryController(a.getId()));
+		for (ActivityDO a : activities) {
+			data.add(createActivityListEntry(a.getActivity().getId()));
 		}
 	}
 	
 	@FXML
 	protected void aboutDialog(ActionEvent event) {
-		Stage dialog = new Stage();
-		dialog.initStyle(StageStyle.UTILITY);
-		Scene scene = new Scene(new Group(new Text(25, 25, "Place a nice Dialog here!")));
-		dialog.setScene(scene);
-		dialog.show();
+		 Dialogs.create()
+			      .title("About...")
+			      .masthead(ActivityWatch.PRG_NAME)
+			      .message( "Version: "+ActivityWatch.PRG_VERSION+"\n" +
+			    		  "Java: " + System.getProperty("java.version")
+			    		  +" on "+System.getProperty("os.name")
+			    		  +" "+System.getProperty("os.version")
+			    		  +" "+System.getProperty("os.arch")
+			    		  +"\n\n"
+			    		  +"by Volker Braun")
+			      .nativeTitleBar()
+			      .showInformation();
+	}
+	
+	@FXML
+	protected void saveStore(ActionEvent event) {
+		activityManager.saveActivities();
+	}
+	
+	@FXML
+	protected void quitApplication(ActionEvent event) {
+		Platform.exit();
 	}
 
 	@FXML
@@ -78,42 +91,58 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	protected void previousDay(ActionEvent event) {
-		selectedDate.add(Calendar.DAY_OF_MONTH, -1);
-		updateDateDisplay(selectedDate);
-		removeActivities();
-		populateActivityList(activityManager.getActivities(selectedDate));
+		selectedDate = selectedDate.minusDays(1);
+		updateDisplay();
 	}
 	
 	@FXML
 	protected void nextDay(ActionEvent event) {
-		selectedDate.add(Calendar.DAY_OF_MONTH, +1);
-		updateDateDisplay(selectedDate);
-		removeActivities();
-		populateActivityList(activityManager.getActivities(selectedDate));
+		selectedDate = selectedDate.plusDays(1);
+		updateDisplay();
 	}
 	
-	private void updateDateDisplay(final GregorianCalendar cal) {
-		Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-            	dateProperty.setValue(sdf.format(cal.getTime()));
-            }
-        });
+	private void updateDisplay() {
+		datePicker.setValue(selectedDate);
+		removeActivities();
+		populateActivityList(activityManager.getActivities(selectedDate));
+		txt_newActivity.requestFocus();
 	}
 	
 	private void addActivity(String name) {
-		Long id = activityManager.getNewActivity().getId();
-		activityManager.getActivity(id).setName(name);
-		activityManager.getActivity(id).setStartDate(selectedDate.getTime());
-		ActivityListEntryController timer = new ActivityListEntryController(id);
+		Long id = activityManager.getNewActivity().getActivity().getId();
+		activityManager.getActivity(id).getActivity().setName(name);
+		activityManager.getActivity(id).getActivity().setStartDate(localDate2Date(selectedDate));
 		
 		ObservableList<ActivityListEntryController> data = lst_activities.getItems();
-        data.add(timer);
+        data.add(createActivityListEntry(id));
         activityManager.startActivity(id);
         activeTimerController.reload();
+	}
+	
+	private ActivityListEntryController createActivityListEntry(Long id) {
+		ActivityListEntryController entryController = new ActivityListEntryController(id);
+		entryController.addEventHandler(RefreshEvent.REFRESH_REQUEST, new EventHandler<RefreshEvent>() {
+
+			@Override
+			public void handle(RefreshEvent arg0) {
+				updateDisplay();
+			}
+		});
+		
+		return entryController;
 	}
 	
 	private void removeActivities() {
 		lst_activities.getItems().clear();
 	}
+	
+	private Date localDate2Date(LocalDate ld) {
+		Instant instant = ld.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+		return Date.from(instant);
+	}
+
+	public void handleWindowShownEvent() {
+		txt_newActivity.requestFocus();
+	}
+
 }

@@ -8,13 +8,21 @@
 <?import javafx.scene.control.Button?>
 
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
-	<HBox>
-		<Button fx:id="btn_toggleTimer" onAction="#toggleTimer" text="Pause"></Button>
-		<VBox>
-			<Label fx:id="lbl_activityName"></Label>
-			<Label fx:id="lbl_activityTime"></Label>
-		</VBox>
-	</HBox>
-	<HBox>
-	</HBox>
+	<VBox fx:id="activeTimerBox" styleClass="active-timer-box" visible="false">
+		<HBox styleClass="timer-detail">
+			<Button fx:id="btn_toggleTimer" onAction="#toggleTimer" text="Pause"></Button>
+			<VBox styleClass="timer-labels">
+				<Label fx:id="lbl_activityName"></Label>
+				<Label fx:id="lbl_activityTime"></Label>
+			</VBox>
+		</HBox>
+		<HBox styleClass="time-buttons">
+			<Button fx:id="btn_minus60" onAction="#minus60" text="-60"></Button>
+			<Button fx:id="btn_minus20" onAction="#minus20" text="-20"></Button>
+			<Button fx:id="btn_minus5" onAction="#minus5" text="-5"></Button>
+			<Button fx:id="btn_plus5" onAction="#plus5" text="+5"></Button>
+			<Button fx:id="btn_plus20" onAction="#plus20" text="+20"></Button>
+			<Button fx:id="btn_plus60" onAction="#plus60" text="+60"></Button>
+		</HBox>
+	</VBox>
 </fx:root>

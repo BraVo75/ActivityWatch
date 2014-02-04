@@ -4,22 +4,17 @@
 package org.bravo.activitywatch;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import org.bravo.activitywatch.entity.Activity;
 
 /**
  * @author Volker
@@ -30,20 +25,10 @@ public class ActiveTimerController extends VBox {
 	@FXML private Label lbl_activityName;
 	@FXML private Label lbl_activityTime;
 	@FXML private Button btn_toggleTimer;
-	@FXML private Activity activity;
+	@FXML private VBox activeTimerBox;
 	
-	private SimpleStringProperty clock = new SimpleStringProperty("");
-	private GregorianCalendar elapsedTime;
 	private ActivityManager activityManager = ActivityManager.getInstance();
 	
-	@FXML private HBox timerLayout;
-	
-	private Date startTime = new Date();
-	private java.util.Timer t;
-
-	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
-	private static final String TIMER_FORMAT = "HH:mm:ss";
-
 	public ActiveTimerController() {
 		
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ActiveTimer.fxml"));
@@ -55,12 +40,19 @@ public class ActiveTimerController extends VBox {
 			throw new RuntimeException(exception);
 		}
         
-		reload();
+		activityManager.getSelectedActivityProperty().addListener(new InvalidationListener() {
+			
+			@Override
+			public void invalidated(Observable arg0) {
+				reload();
+			}
+		});	
+		
 	}
 
 	@FXML
 	protected void toggleTimer(ActionEvent event) {
-		if (activityManager.isRunning()) {
+		if (activityManager.getSelectedActivity().getRunningProperty().getValue()) {
 			stopTimer();
 		}
 		else {
@@ -73,46 +65,79 @@ public class ActiveTimerController extends VBox {
 		System.err.println("delete doesn't work yet");
 	}
 	
+	@FXML
+	protected void minus60(ActionEvent event) {
+		activityManager.subtractMinutes(60L);
+	}
+	
+	@FXML
+	protected void minus20(ActionEvent event) {
+		activityManager.subtractMinutes(20L);
+	}
+	
+	@FXML
+	protected void minus5(ActionEvent event) {
+		activityManager.subtractMinutes(5L);
+	}
+	
+	@FXML
+	protected void plus5(ActionEvent event) {
+		activityManager.addMinutes(5L);
+	}
+	
+	@FXML
+	protected void plus20(ActionEvent event) {
+		activityManager.addMinutes(20L);
+	}
+	
+	@FXML
+	protected void plus60(ActionEvent event) {
+		activityManager.addMinutes(60L);
+	}
+	
 	public void stopTimer() {
 		activityManager.stopActivity();
-		if (!activityManager.isRunning()) { 
-			btn_toggleTimer.setText("Start");
-		}
+		setButtonStatus(false);
 	}
 	
-	public void reload() { // TODO: observable bei start und stop?
-		this.activity = activityManager.getSelectedActivity();
-		
-		if (activity != null) {
-			lbl_activityName.setText(activity.getName());
-			lbl_activityTime.textProperty().bind(clock);
-			updateTimerDisplay();
-			if (activityManager.isRunning()) {
+	public void reload() {
+		if (activityManager.getSelectedActivity() != null) {
+			lbl_activityName.setText(activityManager.getSelectedActivity().getActivity().getName());
+			if (activityManager.getSelectedActivity().getRunningProperty().getValue()) {
 				btn_toggleTimer.setText("Stop");
 			}
+			activityManager.getSelectedActivity().getRunningProperty().addListener(new ChangeListener<Boolean>() {
+				
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable,
+						Boolean oldValue, Boolean newValue) {
+					setButtonStatus(newValue);
+				}
+				
+			});
+			
+			activeTimerBox.setVisible(true);
+			lbl_activityTime.textProperty().bind(activityManager.getSelectedActivity().getTimeProperty());
 		}
-	}
-	
-	private void updateTimerDisplay() {
-		elapsedTime = new GregorianCalendar();
-		elapsedTime.set(Calendar.HOUR_OF_DAY, 0);
-		elapsedTime.set(Calendar.MINUTE, 0);
-		elapsedTime.set(Calendar.SECOND, 0);
-		long t = elapsedTime.getTimeInMillis() + activityManager.getSelectedActivity().getElapsedMillis();
-		elapsedTime.setTimeInMillis(t);
-		Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-            	clock.setValue(sdf.format(elapsedTime.getTime()));
-            }
-        });
+		else {
+			activeTimerBox.setVisible(false);
+		}
+		
 	}
 	
 	public void start() {
-		btn_toggleTimer.setText("Stop");
-		activityManager.startActivity(activity.getId());
+		setButtonStatus(true);
+		activityManager.startActivity(activityManager.getSelectedActivity().getActivity().getId());
 	}
 	
+	private void setButtonStatus(boolean running) {
+		if (running) {
+			btn_toggleTimer.setText("Stop");
+		}
+		else {
+			btn_toggleTimer.setText("Start");
+		}
+	}
 }
 
 //	private static final long serialVersionUID = 1L;

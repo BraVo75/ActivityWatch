@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="ActivityWatch" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<target name="init-fx-tasks">
+		<path id="fxant">
+			<filelist>
+				<file name="${java.home}\..\lib\ant-javafx.jar"/>
+				<file name="${java.home}\lib\jfxrt.jar"/>
+			</filelist>
+		</path>
+	
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
+			uri="javafx:com.sun.javafx.tools.ant"
+			classpathref="fxant"/>
+	</target>
+	<target name="setup-staging-area">
+		<delete dir="externalLibs" />
+		<delete dir="project" />
+		<delete dir="projectRefs" />
+		
+		<mkdir dir="externalLibs" />
+		
+		<copy todir="externalLibs">
+			<fileset dir="/Library/Java/JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/jre/lib">
+				<filename name="jfxrt.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<filename name="controlsfx-8.0.4.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<filename name="swingx-core-1.6.2.jar"/>	
+			</fileset>
+		</copy>
+		
+		<mkdir dir="project" />
+		<copy todir="project">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<include name="src/main/resources/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<include name="src/main/java/**" />
+			</fileset>
+		</copy>
+		
+		<mkdir dir="projectRefs" />
+	</target>
+	<target name='do-compile'>
+		<delete dir="build" />
+		<mkdir dir="build/src" />
+		<mkdir dir="build/libs" />
+		<mkdir dir="build/classes" />
+	
+		<!-- Copy project-libs references -->
+		<copy todir="build/libs">
+			<fileset dir="externalLibs">
+				<include name="jfxrt.jar"/>
+				<include name="swingx-core-1.6.2.jar"/>
+				<include name="controlsfx-8.0.4.jar"/>
+			</fileset>
+		</copy>
+	
+		<!-- Copy project references -->
+	
+		<!-- Copy project sources itself -->
+		<copy todir="build/src">
+			<fileset dir="project/src/main/resources">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="build/src">
+			<fileset dir="project/src/main/java">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	
+		<javac includeantruntime="false" source="1.7" target="1.7" srcdir="build/src" destdir="build/classes" encoding="UTF-8">
+			<classpath>
+				<fileset dir="build/libs">
+					<include name="*"/>
+				</fileset>
+			</classpath>
+		</javac>
+		
+		<!-- Copy over none Java-Files -->
+		<copy todir="build/classes">
+		<fileset dir="project/src/main/resources">
+			<exclude name="**/*.java"/>
+		</fileset>
+		<fileset dir="project/src/main/java">
+			<exclude name="**/*.java"/>
+		</fileset>
+		</copy>
+	
+	
+	</target>
+	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
+		<delete file="dist"/>
+		<delete file="deploy" />
+		
+		<mkdir dir="dist" />
+		<mkdir dir="dist/libs" />
+		
+		<copy todir="dist/libs">
+			<fileset dir="externalLibs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		
+		
+		<fx:resources id="appRes">
+			<fx:fileset dir="dist" includes="ActivityWatch.jar"/>
+			<fx:fileset dir="dist" includes="libs/*"/>
+		</fx:resources> 
+		
+		<fx:application id="fxApplication"
+			name="ActivityWatch"
+			mainClass="org.bravo.activitywatch.ActivityWatch"
+		/>
+	
+		<mkdir dir="build/classes/META-INF" />
+		
+		
+		
+		<fx:jar destfile="dist/ActivityWatch.jar">
+			<fx:application refid="fxApplication"/>
+			<fileset dir="build/classes">
+			</fileset>
+			<fx:resources refid="appRes"/>
+			
+			<manifest>
+				<attribute name="Implementation-Vendor" value="Volker Braun"/>
+				<attribute name="Implementation-Title" value=""/>
+				<attribute name="Implementation-Version" value="0.9beta"/>
+			</manifest>
+		</fx:jar>
+		
+	
+		<mkdir dir="deploy" />
+		<!-- Need to use ${basedir} because somehow the ant task is calculating the directory differently -->
+		<fx:deploy
+			embedJNLP="false"
+			extension="false"
+			includeDT="false"
+			offlineAllowed="true"
+			outdir="${basedir}/deploy"
+			outfile="ActivityWatch" nativeBundles="exe"
+			updatemode="background" >
+	
+			<fx:info title="ActivityWatch" vendor="Volker Braun"/>
+			<fx:application refId="fxApplication"/>
+			<fx:resources refid="appRes"/>
+		</fx:deploy>
+		
+		
+	</target>
+</project>
