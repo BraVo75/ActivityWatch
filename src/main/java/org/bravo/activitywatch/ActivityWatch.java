@@ -11,7 +11,7 @@ import javafx.stage.WindowEvent;
 public class ActivityWatch extends Application {
 
 	public static final String PRG_NAME = "ActivityWatch";
-	public static final String PRG_VERSION = "0.9 beta";
+	public static final String PRG_VERSION = "0.9b2";
 	public static final String AWSTORE_XML = "AWStore-dev.xml";
 	public static final int AWSTORE_VERSION = 2;
 	
@@ -31,7 +31,9 @@ public class ActivityWatch extends Application {
 	        });
 		
 	        Scene scene = new Scene(root);
-	        primaryStage.setMinWidth(550L);
+	        primaryStage.setMinWidth(320L);
+	        primaryStage.setWidth(320L);
+	        primaryStage.setMaxWidth(320L);
 	        primaryStage.setMinHeight(200L);
 	        primaryStage.setTitle(PRG_NAME);
 	        primaryStage.setScene(scene);

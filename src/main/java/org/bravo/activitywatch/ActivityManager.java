@@ -205,4 +205,7 @@ public class ActivityManager {
 		activities.remove(getActivity(activityId));
 	}
 	
+	public Integer getActivityCount() {
+		return activities.size();
+	}
 }

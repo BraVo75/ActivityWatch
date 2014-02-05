@@ -12,15 +12,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?> 
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.layout.StackPane?> 
 
 <VBox fx:controller="org.bravo.activitywatch.MainWindowController"
 	xmlns:fx="http://javafx.com/fxml" fx:id="mainLayout">
 	<MenuBar useSystemMenuBar="true">
 		<Menu text="File">
 			<items>
-				<MenuItem text="Save" onAction="#saveStore"/>
-				<MenuItem text="Quit" onAction="#quitApplication"/>
+				<MenuItem text="Save" onAction="#saveStore" accelerator="Shortcut+S"/>
+				<MenuItem text="Quit" onAction="#quitApplication" accelerator="Shortcut+Q"/>
 			</items>
 		</Menu>
 		<Menu text="Help">
@@ -29,17 +30,17 @@
 			</items>
 		</Menu>
 	</MenuBar>
-	<HBox fx:id="controlBox" styleClass="control-box">
-		<VBox styleClass="left-box">
+	<Pane fx:id="controlBox" styleClass="control-box">
+		<VBox fx:id="leftBox" styleClass="left-box">
 			<HBox styleClass="date-select">
-				<Button fx:id="btn_previousDay" onAction="#previousDay" text="prev"></Button>
+				<Button fx:id="btn_previousDay" onAction="#previousDay" text="&lt;"></Button>
 				<DatePicker fx:id="datePicker" onAction="#dateSelected"></DatePicker>
-				<Button fx:id="btn_nextDay" onAction="#nextDay" text="next"></Button>
+				<Button fx:id="btn_nextDay" onAction="#nextDay" text="&gt;"></Button>
 			</HBox>
 			<TextField GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="txt_newActivity" onAction="#createActivity" />
 		</VBox>
-		<VBox fx:id="activeTimerLayout" styleClass="right-box"></VBox>
-	</HBox>
+		<VBox fx:id="activeTimerLayout" styleClass="right-box" onMouseEntered="#activeTimerMouseEnter" onMouseExited="#activeTimerMouseExited"></VBox>
+	</Pane>
 	<VBox fx:id="activitiesLayout">
 		<ListView fx:id="lst_activities" GridPane.columnIndex="0" GridPane.rowIndex="1"></ListView>
 	</VBox>

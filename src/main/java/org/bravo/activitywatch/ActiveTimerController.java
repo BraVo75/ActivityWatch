@@ -5,6 +5,8 @@ package org.bravo.activitywatch;
 
 import java.io.IOException;
 
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -24,8 +26,11 @@ public class ActiveTimerController extends VBox {
 
 	@FXML private Label lbl_activityName;
 	@FXML private Label lbl_activityTime;
+	@FXML private Label lbl_shortName;
+	@FXML private Label lbl_shortTime;
 	@FXML private Button btn_toggleTimer;
 	@FXML private VBox activeTimerBox;
+	@FXML private VBox simpleTimerBox;
 	
 	private ActivityManager activityManager = ActivityManager.getInstance();
 	
@@ -62,7 +67,24 @@ public class ActiveTimerController extends VBox {
 	
 	@FXML
 	protected void deleteTimer(ActionEvent event) {
-		System.err.println("delete doesn't work yet");
+		activityManager.removeActivity(activityManager.getSelectedActivityProperty().getValue());
+		this.fireEvent(new RefreshEvent());
+	}
+	
+	@FXML
+	protected void renameTimer(ActionEvent event) {
+		String response = Dialogs.create()
+				.title("Rename")
+				.message("Rename Activity")
+				.nativeTitleBar()
+				.showTextInput(activityManager.getSelectedActivity().getActivity().getName());
+		
+		if (response != null && !response.isEmpty()) {
+			activityManager.getSelectedActivity().getActivity().setName(response);
+			lbl_activityName.setText(response);
+			lbl_shortName.setText(response);
+		}
+		this.fireEvent(new RefreshEvent());
 	}
 	
 	@FXML
@@ -103,6 +125,7 @@ public class ActiveTimerController extends VBox {
 	public void reload() {
 		if (activityManager.getSelectedActivity() != null) {
 			lbl_activityName.setText(activityManager.getSelectedActivity().getActivity().getName());
+			lbl_shortName.setText(activityManager.getSelectedActivity().getActivity().getName());
 			if (activityManager.getSelectedActivity().getRunningProperty().getValue()) {
 				btn_toggleTimer.setText("Stop");
 			}
@@ -116,11 +139,31 @@ public class ActiveTimerController extends VBox {
 				
 			});
 			
+			activityManager.getSelectedActivity().getRunningProperty().addListener(new ChangeListener<Boolean>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable,
+						Boolean oldValue, Boolean newValue) {
+					if (newValue) {
+						simpleTimerBox.getStyleClass().add("running");
+					}
+					else {
+						simpleTimerBox.getStyleClass().remove("running");
+					}
+					
+				}
+				
+			});
+			
 			activeTimerBox.setVisible(true);
 			lbl_activityTime.textProperty().bind(activityManager.getSelectedActivity().getTimeProperty());
+			lbl_shortTime.textProperty().bind(activityManager.getSelectedActivity().getTimeProperty());
 		}
 		else {
 			activeTimerBox.setVisible(false);
+			lbl_shortTime.textProperty().unbind();
+			lbl_shortTime.setText("");
+			lbl_shortName.setText("");
 		}
 		
 	}
@@ -137,6 +180,14 @@ public class ActiveTimerController extends VBox {
 		else {
 			btn_toggleTimer.setText("Start");
 		}
+	}
+
+	public void showDetails() {
+		simpleTimerBox.setVisible(false);
+	}
+
+	public void hideDetails() {
+		simpleTimerBox.setVisible(true);
 	}
 }
 

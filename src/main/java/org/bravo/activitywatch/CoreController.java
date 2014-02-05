@@ -92,6 +92,7 @@ public class CoreController {
 			store.getSettings().setCountersVisible(true);
 			store.getSettings().setStatusBarVisible(true);
 			store.getSettings().setAlwaysOnTop(false);
+			store.setVersion(1);
 		}
 		
 		if( store.getVersion() == 1) {

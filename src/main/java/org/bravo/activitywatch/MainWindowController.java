@@ -14,8 +14,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Tooltip;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import org.bravo.activitywatch.entity.ActivityDO;
 import org.controlsfx.dialog.Dialogs;
@@ -26,7 +29,8 @@ public class MainWindowController {
 	@FXML private VBox activeTimerLayout;
 	@FXML private ListView<ActivityListEntryController> lst_activities;
 	@FXML private DatePicker datePicker;
-	@FXML private HBox controlBox;
+	@FXML private Pane controlBox;
+	@FXML private VBox leftBox;
 	
 	private ActivityManager activityManager = ActivityManager.getInstance();
 	private LocalDate selectedDate;
@@ -37,15 +41,55 @@ public class MainWindowController {
 		selectedDate = LocalDate.now();
 		datePicker.setValue(selectedDate);
 		activeTimerLayout.getChildren().add(activeTimerController);
+		
+		setupUI();
+		
+		activeTimerController.addEventHandler(RefreshEvent.REFRESH_REQUEST, new EventHandler<RefreshEvent>() {
 
+			@Override
+			public void handle(RefreshEvent arg0) {
+				updateDisplay();
+			}
+		});
 	}
 
+	private void setupUI() {
+		DropShadow ds = new DropShadow();
+		ds.setOffsetY(-3.0);
+        ds.setOffsetX(-3.0);
+        ds.setColor(Color.GRAY);
+		activeTimerLayout.setLayoutX(20);
+		activeTimerLayout.toBack();
+		activeTimerLayout.setEffect(ds);
+		
+		Tooltip t = new Tooltip("Enter your activity here");
+		txt_newActivity.setTooltip(t);
+	}
+	
+	@FXML
+	protected void activeTimerMouseEnter() {
+		if (activityManager.getSelectedActivity() != null) {
+			activeTimerLayout.toFront();
+			activeTimerController.showDetails();
+		}
+	}
+	
+	@FXML
+	protected void activeTimerMouseExited() {
+		hideActiveTimerDetails();
+	}
+
+	private void hideActiveTimerDetails() {
+		activeTimerLayout.toBack();
+		activeTimerController.hideDetails();
+	}
+	
 	@FXML
 	protected void dateSelected(ActionEvent event) {
 		selectedDate = datePicker.getValue();
 		updateDisplay();
 	}
-	 
+	
 	private void populateActivityList(List<ActivityDO> activities) {
 		ObservableList<ActivityListEntryController> data = lst_activities.getItems();
 		for (ActivityDO a : activities) {
@@ -64,7 +108,9 @@ public class MainWindowController {
 			    		  +" "+System.getProperty("os.version")
 			    		  +" "+System.getProperty("os.arch")
 			    		  +"\n\n"
-			    		  +"by Volker Braun")
+			    		  +"Activities in Database: "+activityManager.getActivityCount()
+			    		  +"\n\n"
+			    		  +"Created by Volker Braun")
 			      .nativeTitleBar()
 			      .showInformation();
 	}
@@ -102,10 +148,14 @@ public class MainWindowController {
 	}
 	
 	private void updateDisplay() {
+		if (activityManager.getSelectedActivity() == null) {
+			hideActiveTimerDetails();
+		}
 		datePicker.setValue(selectedDate);
 		removeActivities();
 		populateActivityList(activityManager.getActivities(selectedDate));
 		txt_newActivity.requestFocus();
+		activeTimerController.reload();
 	}
 	
 	private void addActivity(String name) {

@@ -11,11 +11,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -144,6 +143,9 @@ public class ActivityListEntryController extends VBox {
 		if (activityManager.getActivity(activityId).isRunning()) {
 			listbox.getStyleClass().add("running");
 		}
+		
+		Tooltip t = new Tooltip(getActivity().getName());
+		lbl_name.setTooltip(t);
 	}
 	
 	private void setupContextMenu() {
@@ -180,6 +182,7 @@ public class ActivityListEntryController extends VBox {
 			activityManager.getActivity(activityId).getActivity().setName(response);
 			lbl_name.setText(response);
 		}
+		this.fireEvent(new RefreshEvent());
 	}
 	
 	public void start() {

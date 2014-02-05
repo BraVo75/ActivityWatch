@@ -20,11 +20,21 @@
 
 #lst_activities {
 	-fx-pref-height: 99999;
+	-fx-max-width: 320;
+}
+
+.activitiesLayout {
+	-fx-max-width: 320;
 }
 
 #lst_activities .list-cell {
 	-fx-cell-size: 26px;
 	-fx-padding: 0 0 0 0;
+	-fx-text-overrun: ellipsis ;
+}
+
+#lst_activities .list-cell .label {
+	-fx-text-overrun: ellipsis ;
 }
 
 #lst_activities .list-cell:selected .label {
@@ -39,29 +49,59 @@
 	-fx-background-color: white;
 }
 
-#lbl_time {
-}
-
 .control-box {
+	-fx-min-height: 80;
 }
 
 .left-box {
 	-fx-border-width: 0 1 0 0;
-	-fx-border-color: white;
-	-fx-padding: 10 10 10 10;
-	-fx-spacing: 10;
-	-fx-min-width: 311;
-}
-
-.right-box {
-	-fx-border-width: 0 0 0 1;
 	-fx-border-color: grey;
 	-fx-padding: 10 10 10 10;
 	-fx-spacing: 10;
+	-fx-max-width: 220;
+	-fx-min-width: 220;
+	-fx-background-color: #f7f7f7;
+}
+
+/* right box *****************************/
+
+.right-box {
+	-fx-background-color: #f7f7f7 ;
+	-fx-border-width: 0 0 0 1;
+	-fx-border-color: grey;
+	-fx-max-width: 300;
+	-fx-min-width: 300;
+}
+
+.timer-detail {
+	-fx-spacing: 0;
+	-fx-pref-width: 220;
+}
+
+.time-buttons {
+	-fx-spacing: 1;
+	-fx-opacity: 0;
+	-fx-pref-height: 20;
+}
+
+.timer-control-box {
+	-fx-spacing: 5;
+	-fx-pref-width: 80;
+	-fx-alignment: top-center ;
+}
+
+.timer-toolbar {
+	-fx-alignment: top-center;
+	-fx-spacing: 5;
+}
+
+.timer-toolbar .button {
+	-fx-pref-width: 42.5;
 }
 
 #btn_toggleTimer {
-	-fx-min-width: 50;
+	-fx-pref-width: 90;
+	-fx-pref-height: 37.5;
 }
 
 .date-select {
@@ -69,15 +109,31 @@
 }
 
 .active-timer-box {
+	-fx-padding: 5 5 5 5;
 	-fx-spacing: 5;
 }
 
-.timer-detail {
+.active-timer-simple {
+	-fx-background-color: #f7f7f7;
+	-fx-max-width: 100;
+	-fx-padding: 16 5 10 5;
 	-fx-spacing: 10;
+	-fx-alignment: top-center ;
 }
 
-.time-buttons {
-	-fx-spacing: 1;
+.active-timer-simple.running {
+}
+
+.active-timer-simple #lbl_shortTime {
+	-fx-font-size: 1.3em;
+}
+
+.active-timer-simple #lbl_shortName {
+	-fx-font-size: 0.8em;
+}
+
+.right-box:hover .time-buttons {
+	-fx-opacity: 1;
 }
 
 .time-buttons .button {
@@ -91,8 +147,14 @@
 }
 
 .timer-labels {
-	-fx-spacing: 5;
+	-fx-spacing: 0;
 	-fx-alignment: center-left ;
+}
+
+.timer-labels #lbl_activityName {
+	-fx-wrap-text: true ;
+	-fx-font-size: 0.9em;
+	-fx-pref-height: 30;
 }
 
 #lbl_activityTime {
@@ -107,6 +169,14 @@
 
 .timer-detail-button:hover {
 	-fx-text-fill: blue;
+}
+
+.listbox {
+	-fx-max-width: 318;
+}
+
+.listbox #lbl_time {
+	-fx-min-width: 60;
 }
 
 .listbox.running .timer-detail-button {
