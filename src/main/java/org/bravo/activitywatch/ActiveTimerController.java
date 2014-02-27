@@ -156,8 +156,16 @@ public class ActiveTimerController extends VBox {
 			});
 			
 			activeTimerBox.setVisible(true);
-			lbl_activityTime.textProperty().bind(activityManager.getSelectedActivity().getTimeProperty());
-			lbl_shortTime.textProperty().bind(activityManager.getSelectedActivity().getTimeProperty());
+
+			activityManager.getSelectedActivity().getTimeProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> observable,
+						String oldValue, String newValue) {
+					lbl_shortTime.setText(TimeConverter.convertToTime(Long.valueOf(newValue)));
+					lbl_activityTime.setText(TimeConverter.convertToTime(Long.valueOf(newValue)));
+				}
+			});
 		}
 		else {
 			activeTimerBox.setVisible(false);

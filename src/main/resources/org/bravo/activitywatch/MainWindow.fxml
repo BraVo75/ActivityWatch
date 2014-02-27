@@ -24,6 +24,14 @@
 				<MenuItem text="Quit" onAction="#quitApplication" accelerator="Shortcut+Q"/>
 			</items>
 		</Menu>
+		<Menu text="Options">
+			<Menu text="Time format">
+				<items>
+					<CheckMenuItem fx:id="formatTime" text="Time" onAction="#timeFormatTime" />
+					<CheckMenuItem fx:id="formatDecimal" text="Decimal" onAction="#timeFormatDecimal" />
+				</items>
+			</Menu>
+		</Menu>
 		<Menu text="Help">
 			<items>
 				<MenuItem text="About" onAction="#aboutDialog"/>

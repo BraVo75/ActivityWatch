@@ -2,6 +2,7 @@ package org.bravo.activitywatch;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -21,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import org.bravo.activitywatch.entity.ActivityDO;
+import org.bravo.activitywatch.entity.Settings.TimeFormat;
 import org.controlsfx.dialog.Dialogs;
 
 public class MainWindowController {
@@ -31,11 +34,16 @@ public class MainWindowController {
 	@FXML private DatePicker datePicker;
 	@FXML private Pane controlBox;
 	@FXML private VBox leftBox;
+	@FXML private CheckMenuItem formatTime;
+	@FXML private CheckMenuItem formatDecimal;
 	
 	private ActivityManager activityManager = ActivityManager.getInstance();
 	private LocalDate selectedDate;
 	private ActiveTimerController activeTimerController = new ActiveTimerController();
-
+	private Messages messages = Messages.getInstance();
+	private SettingsManager settings = SettingsManager.getInstance();
+	private CoreController core = CoreController.getInstance();
+	
 	@FXML
 	protected void initialize() {
 		selectedDate = LocalDate.now();
@@ -64,6 +72,8 @@ public class MainWindowController {
 		
 		Tooltip t = new Tooltip("Enter your activity here");
 		txt_newActivity.setTooltip(t);
+		formatTime.setSelected(settings.getTimeFormat().equals(TimeFormat.TIME));
+		formatDecimal.setSelected(settings.getTimeFormat().equals(TimeFormat.DECIMAL));
 	}
 	
 	@FXML
@@ -77,6 +87,22 @@ public class MainWindowController {
 	@FXML
 	protected void activeTimerMouseExited() {
 		hideActiveTimerDetails();
+	}
+	
+	@FXML
+	protected void timeFormatTime() {
+		formatDecimal.setSelected(false);
+		formatTime.setSelected(true);
+		settings.setTimeFormat(TimeFormat.TIME);
+		updateDisplay();
+	}
+	
+	@FXML
+	protected void timeFormatDecimal() {
+		formatDecimal.setSelected(true);
+		formatTime.setSelected(false);
+		settings.setTimeFormat(TimeFormat.DECIMAL);
+		updateDisplay();
 	}
 
 	private void hideActiveTimerDetails() {
@@ -92,6 +118,9 @@ public class MainWindowController {
 	
 	private void populateActivityList(List<ActivityDO> activities) {
 		ObservableList<ActivityListEntryController> data = lst_activities.getItems();
+		if (activities == null) {
+			return;
+		}
 		for (ActivityDO a : activities) {
 			data.add(createActivityListEntry(a.getActivity().getId()));
 		}
@@ -99,18 +128,21 @@ public class MainWindowController {
 	
 	@FXML
 	protected void aboutDialog(ActionEvent event) {
-		 Dialogs.create()
-			      .title("About...")
+		Dialogs.create()
+			      .title(messages.get(Messages.Keys.ABOUT_TITLE))
 			      .masthead(ActivityWatch.PRG_NAME)
-			      .message( "Version: "+ActivityWatch.PRG_VERSION+"\n" +
-			    		  "Java: " + System.getProperty("java.version")
+			      .message( messages.get(Messages.Keys.ABOUT_VERSION) +": "+ActivityWatch.PRG_VERSION+"\n" +
+			    		  messages.get(Messages.Keys.ABOUT_JAVA) +": " + System.getProperty("java.version")
 			    		  +" on "+System.getProperty("os.name")
 			    		  +" "+System.getProperty("os.version")
 			    		  +" "+System.getProperty("os.arch")
 			    		  +"\n\n"
-			    		  +"Activities in Database: "+activityManager.getActivityCount()
+			    		  +messages.get(Messages.Keys.ABOUT_ACTIVITIES_IN_DB) +": "+activityManager.getActivityCount()
 			    		  +"\n\n"
-			    		  +"Created by Volker Braun")
+			    		  +messages.get(Messages.Keys.ABOUT_CREATED)
+			    		  +"\n\n"
+			    		  +core.getNewestVersionInfo()
+			    		  )
 			      .nativeTitleBar()
 			      .showInformation();
 	}
@@ -160,15 +192,27 @@ public class MainWindowController {
 	
 	private void addActivity(String name) {
 		Long id = activityManager.getNewActivity().getActivity().getId();
+		
+		LocalTime time = NameParser.parseName(name.substring(name.lastIndexOf(" ")+1));
+		if (name.indexOf(" ") > 0) {
+			if (time.toSecondOfDay() > 0) {
+				name = name.substring(0, name.lastIndexOf(" "));
+			}
+		}
+		
 		activityManager.getActivity(id).getActivity().setName(name);
 		activityManager.getActivity(id).getActivity().setStartDate(localDate2Date(selectedDate));
+		activityManager.getActivity(id).setTime(time);
 		
 		ObservableList<ActivityListEntryController> data = lst_activities.getItems();
         data.add(createActivityListEntry(id));
-        activityManager.startActivity(id);
+        activityManager.updateTimerDisplay(id);
+        if (time.toSecondOfDay() == 0) {
+        	activityManager.startActivity(id);
+        }
         activeTimerController.reload();
 	}
-	
+
 	private ActivityListEntryController createActivityListEntry(Long id) {
 		ActivityListEntryController entryController = new ActivityListEntryController(id);
 		entryController.addEventHandler(RefreshEvent.REFRESH_REQUEST, new EventHandler<RefreshEvent>() {

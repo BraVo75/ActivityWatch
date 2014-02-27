@@ -20,18 +20,8 @@
 		<mkdir dir="externalLibs" />
 		
 		<copy todir="externalLibs">
-			<fileset dir="/Library/Java/JavaVirtualMachines/jdk1.7.0_09.jdk/Contents/Home/jre/lib">
-				<filename name="jfxrt.jar"/>	
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
 			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
 				<filename name="controlsfx-8.0.4.jar"/>	
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
-				<filename name="swingx-core-1.6.2.jar"/>	
 			</fileset>
 		</copy>
 		
@@ -58,8 +48,6 @@
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
-				<include name="jfxrt.jar"/>
-				<include name="swingx-core-1.6.2.jar"/>
 				<include name="controlsfx-8.0.4.jar"/>
 			</fileset>
 		</copy>
@@ -78,7 +66,7 @@
 			</fileset>
 		</copy>
 	
-		<javac includeantruntime="false" source="1.7" target="1.7" srcdir="build/src" destdir="build/classes" encoding="UTF-8">
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="UTF-8">
 			<classpath>
 				<fileset dir="build/libs">
 					<include name="*"/>
@@ -120,6 +108,7 @@
 		<fx:application id="fxApplication"
 			name="ActivityWatch"
 			mainClass="org.bravo.activitywatch.ActivityWatch"
+			toolkit="fx"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
@@ -133,9 +122,9 @@
 			<fx:resources refid="appRes"/>
 			
 			<manifest>
-				<attribute name="Implementation-Vendor" value="Volker Braun"/>
+				<attribute name="Implementation-Vendor" value="VolkerBraun"/>
 				<attribute name="Implementation-Title" value=""/>
-				<attribute name="Implementation-Version" value="0.9beta"/>
+				<attribute name="Implementation-Version" value="0.9b2"/>
 			</manifest>
 		</fx:jar>
 		
@@ -148,10 +137,10 @@
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="ActivityWatch" nativeBundles="exe"
+			outfile="ActivityWatch" nativeBundles="dmg"
 			updatemode="background" >
 	
-			<fx:info title="ActivityWatch" vendor="Volker Braun"/>
+			<fx:info title="ActivityWatch" vendor="VolkerBraun"/>
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
 		</fx:deploy>

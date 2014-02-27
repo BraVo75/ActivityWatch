@@ -38,13 +38,8 @@ public class ActivityListEntryController extends VBox {
 	private ContextMenu contextMenu;
 	
 	private ActivityManager activityManager = ActivityManager.getInstance();
-//	private SimpleStringProperty clock = new SimpleStringProperty("");
-//	private GregorianCalendar elapsedTime;
 	
 	@FXML private HBox timerLayout;
-
-//	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
-//	private static final String TIMER_FORMAT = "HH:mm:ss";
 
 	public ActivityListEntryController(Long activityId) {
 		this.activityId = activityId;
@@ -76,8 +71,19 @@ public class ActivityListEntryController extends VBox {
 			
 		});
 		
-		lbl_time.setText(activityManager.getActivity(activityId).getTimeProperty().getValue());
-		lbl_time.textProperty().bind(activityManager.getActivity(activityId).getTimeProperty());
+		if (activityManager.getActivity(activityId).getTimeProperty().getValue() != "") {
+			lbl_time.setText(TimeConverter.autoconvert(Long.valueOf(activityManager.getActivity(activityId).getTimeProperty().getValue())));
+		}
+
+		activityManager.getActivity(activityId).getTimeProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				lbl_time.setText(TimeConverter.autoconvert(Long.valueOf(newValue)));
+			}
+		});
+//		lbl_time.textProperty().bind(activityManager.getActivity(activityId).getTimeProperty());
 	}
 
 	private Activity getActivity() {

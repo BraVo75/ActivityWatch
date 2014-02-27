@@ -2,14 +2,33 @@
        "http://www.w3.org/TR/html4/strict.dtd">
        <html>
 <body>
-	<p>ActivityWatch</p>
-    <script src="http://www.java.com/js/deployJava.js"></script>
-    <script>
-        // using JavaScript to get location of JNLP file relative to HTML page
-        var dir = location.href.substring(0, location.href.lastIndexOf('/')+1);
-        var url = dir + "ActivityWatch.jnlp";
-        deployJava.createWebStartLaunchButton(url, '1.6.0');
-    </script>
+	<div>
+		<p>ActivityWatch 0.9b2</p>
+		<table style="border: 1px solid grey">
+			<tr>
+				<th>Platform</th>
+				<th>Version</th>
+				<th>Size</th>
+			</tr>
+			
+			<tr>
+				<td><a href="ActivityWatch_0.9b2.dmg">Mac OSX</a></td>
+				<td>0.9b2</td>
+				<td>72MB</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div>
+		<p>ActivityWatch 0.8 (old)</p>
+	    <script src="http://www.java.com/js/deployJava.js"></script>
+	    <script>
+	        // using JavaScript to get location of JNLP file relative to HTML page
+	        var dir = location.href.substring(0, location.href.lastIndexOf('/')+1);
+	        var url = dir + "ActivityWatch.jnlp";
+	        deployJava.createWebStartLaunchButton(url, '1.6.0');
+	    </script>
+	</div>
     
 </body>
 </html>

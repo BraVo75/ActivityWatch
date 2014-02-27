@@ -1,12 +1,10 @@
 package org.bravo.activitywatch;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -27,9 +25,6 @@ import org.bravo.activitywatch.entity.ActivityDO;
  */
 public class ActivityManager {
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat(TIMER_FORMAT);
-	private static final String TIMER_FORMAT = "HH:mm:ss";
-
 	private List<ActivityDO> activities;
 	
 	private SimpleLongProperty selectedActivity = new SimpleLongProperty();
@@ -57,21 +52,27 @@ public class ActivityManager {
 	
 	private void loadActivities() {
 		List<Activity> acts = CoreController.getInstance().getActivities();
+		if (acts == null) { 
+			return; 
+		}
 		this.activities = new ArrayList<ActivityDO>();
 		for (Activity a : acts) {
 			ActivityDO activityDO = new ActivityDO(a);
-			activityDO.updateTimeProperty(millisToTime(a.getElapsedMillis()));
+			activityDO.updateTimeProperty();
 			activities.add(activityDO);
 		}
 	}
 	
 	public void saveActivities() {
-		List<Activity> l = new ArrayList<Activity>();
-		for (ActivityDO a : activities) {
-			l.add(a.getActivity());
+		if (activities == null) {
+			return;
 		}
-		CoreController.getInstance().setActivities(l);
-		CoreController.getInstance().saveActivities();
+			List<Activity> l = new ArrayList<Activity>();
+			for (ActivityDO a : activities) {
+				l.add(a.getActivity());
+			}
+			CoreController.getInstance().setActivities(l);
+			CoreController.getInstance().saveActivities();
 	}
 	
 	public void startActivity(final Long id) {
@@ -110,18 +111,8 @@ public class ActivityManager {
 		selectedActivity.setValue(id);
 	}
 	
-	private void updateTimerDisplay(final Long id) {
-		getActivity(id).getTimeProperty().setValue(millisToTime(getActivity(id).getActivity().getElapsedMillis()));
-	}
-	
-	private String millisToTime(Long millis) {
-		GregorianCalendar elapsedTime = new GregorianCalendar();
-		elapsedTime.set(Calendar.HOUR_OF_DAY, 0);
-		elapsedTime.set(Calendar.MINUTE, 0);
-		elapsedTime.set(Calendar.SECOND, 0);
-		long t = elapsedTime.getTimeInMillis() + millis;
-		elapsedTime.setTimeInMillis(t);
-		return sdf.format(elapsedTime.getTime());
+	public void updateTimerDisplay(final Long id) {
+		getActivity(id).updateTimeProperty();
 	}
 	
 	public void stopActivity() {
@@ -141,6 +132,9 @@ public class ActivityManager {
 	}
 	
 	public ActivityDO getActivity(Long id) {
+		if (activities == null) {
+			return null;
+		}
 		for (ActivityDO a : activities) {
 			if (a.getActivity().getId().equals(id)) {
 				return a;
@@ -170,6 +164,9 @@ public class ActivityManager {
 	}
 	
 	public List<ActivityDO> getActivities(LocalDate d) {
+		if (activities == null) {
+			return null;
+		}
 		List<ActivityDO> filteredList = new ArrayList<ActivityDO>();
 		for (ActivityDO a : activities) {
 			Instant instant = Instant.ofEpochMilli(a.getActivity().getStartDate().getTime());

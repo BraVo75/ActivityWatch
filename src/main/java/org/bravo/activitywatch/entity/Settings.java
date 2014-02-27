@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.bravo.activitywatch;
+package org.bravo.activitywatch.entity;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,6 +14,11 @@ public class Settings {
 	private boolean statusBar;
 	private boolean countersVisible;
 	private boolean alwaysOnTop;
+	private TimeFormat timeFormat;
+	
+	public static enum TimeFormat {
+		TIME, DECIMAL;
+	}
 
 	/**
 	 * @return the alwaysOnTop
@@ -56,4 +61,13 @@ public class Settings {
 	public void setStatusBarVisible(boolean statusBarVisible) {
 		this.statusBar = statusBarVisible;
 	}
+
+	public TimeFormat getTimeFormat() {
+		return timeFormat;
+	}
+
+	public void setTimeFormat(TimeFormat timeFormat) {
+		this.timeFormat = timeFormat;
+	}
+	
 }

@@ -11,9 +11,10 @@ import javafx.stage.WindowEvent;
 public class ActivityWatch extends Application {
 
 	public static final String PRG_NAME = "ActivityWatch";
-	public static final String PRG_VERSION = "0.9b2";
+	public static final String PRG_VERSION = "0.9";
 	public static final String AWSTORE_XML = "AWStore-dev.xml";
-	public static final int AWSTORE_VERSION = 2;
+	public static final int AWSTORE_VERSION = 3;
+	public static final int AWVERSION_ID = 1;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -44,35 +45,10 @@ public class ActivityWatch extends Application {
 	@Override
 	public void stop() throws Exception {
 		ActivityManager.getInstance().saveActivities();
-		System.out.println("Shutting down.");
 		super.stop();
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-//		String storePath = null;
-//		for(String arg : args)
-//		{
-//			if(arg.startsWith("--settings-file="))
-//			{
-//				storePath = arg.replaceFirst("--settings-file=", "");;
-//			}
-//		}
-//		if( storePath == null)
-//		{
-//			storePath = System.getProperty("user.home")+File.separator+AWSTORE_XML;
-//		}
-//		
 		launch(args);
 	}
-
-////		datePicker.setDate(displayedDate.getTime());
-////		mainLayout.getChildren().add(datePicker);
-
-//	private void resizeWindow() {
-//		myStage.sizeToScene();
-//	}
-
 }
