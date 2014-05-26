@@ -2,7 +2,6 @@ package org.bravo.activitywatch.entity;
 
 import java.time.LocalTime;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,12 +38,7 @@ public class ActivityDO {
 	}
 	
 	public void updateTimeProperty(final String formattedTime) {
-		Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-            	timeProperty.setValue(formattedTime);
-            }
-        });
+    	timeProperty.setValue(formattedTime);
 	}
 	
 	public BooleanProperty getRunningProperty() {
@@ -78,5 +72,6 @@ public class ActivityDO {
 		addMinutes(time.getHour()*60);
 		addMinutes(time.getMinute());
 		addSeconds(time.getSecond());
+		updateTimeProperty();
 	}
 }

@@ -12,12 +12,15 @@
 <?import javafx.scene.control.cell.TextFieldListCell?>
 
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml" styleClass="list-row">
-	<HBox fx:id="listbox" styleClass="listbox" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" onMouseClicked="#mouseClicked">
-		<Label fx:id="lbl_name"></Label>
-		<Region HBox.hgrow="ALWAYS" maxWidth="999999"></Region>
-		<Label fx:id="lbl_time"></Label>
-		<!-- 
- 		<Button fx:id="btn_detail" onAction="#timerDetail" text="i" visible="false" styleClass="timer-detail-button"></Button>
-		 -->
-	</HBox>
+	<VBox fx:id="rowLayout">
+		<HBox fx:id="listbox" styleClass="listbox" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" onMouseClicked="#mouseClicked">
+			<Label fx:id="lbl_name"></Label>
+			<Region HBox.hgrow="ALWAYS" maxWidth="999999"></Region>
+			<Label fx:id="lbl_time"></Label>
+			<Button fx:id="btn_delete" styleClass="btn_delete" onAction="#deleteTimer" text=""></Button>
+			<!-- 
+	 		<Button fx:id="btn_detail" onAction="#timerDetail" text="i" visible="false" styleClass="timer-detail-button"></Button>
+			 -->
+		</HBox>
+	</VBox>
 </fx:root>

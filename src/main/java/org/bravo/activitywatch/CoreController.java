@@ -35,9 +35,14 @@ import org.controlsfx.dialog.Dialogs;
  */
 public class CoreController {
 
+	private static final String UPDATE_URL = "http://bra-vo.de/activitywatch/versions.xml";
+	private static final String DEFAULT_DOWNLOAD_URL = "http://bra-vo.de/activitywatch";
 	private static final CoreController instance = new CoreController();
 	private Messages messages = Messages.getInstance();
 	private SettingsManager settingsManager = SettingsManager.getInstance();
+	
+	private AWVersion awVersion;
+	private String updateMessage;
 
 	private CoreController() {
 		loadSettings();
@@ -118,7 +123,7 @@ public class CoreController {
 		}
 		
 		if( store.getVersion() == 2) {
-			store.getSettings().setTimeFormat(Settings.TimeFormat.DECIMAL);
+			store.getSettings().setTimeFormat(Settings.TimeFormat.TIME);
 		}
 	}
 	
@@ -171,7 +176,20 @@ public class CoreController {
 	}
 	
 	public String getNewestVersionInfo() {
-		
+		if (awVersion == null) {
+			checkVersion();
+		}
+		return updateMessage;
+	}
+	
+	public boolean isUpdateAvailable() {
+		if (awVersion == null) {
+			checkVersion();
+		}
+		return awVersion != null;
+	}
+	
+	private void checkVersion() {
 		URL url;
 		URLConnection connection;
 		
@@ -179,20 +197,23 @@ public class CoreController {
 		JAXBContext context;
 
 		try {
-			url = new URL("http://bra-vo.de/activitywatch/versions.xml");
+			url = new URL(UPDATE_URL);
 			connection = url.openConnection();
 			context = JAXBContext.newInstance(AWVersions.class);
 			Unmarshaller um = context.createUnmarshaller();
 			versions = (AWVersions) um.unmarshal(connection.getInputStream());
 		} catch (IOException | JAXBException e) {
-			return messages.get(Keys.UPDATE_CONNECT_ERROR);
+			updateMessage = messages.get(Keys.UPDATE_CONNECT_ERROR);
+			return;
 		}
 		for (AWVersion v : versions.getVersionList()) {
-			if (v.getId() > ActivityWatch.AWVERSION_ID) {
-				return MessageFormat.format(messages.get(Keys.UPDATE_NEW_VERSION), v.getVersionNumber());
+			if (v.getPlatform().equals(ActivityWatch.PLATFORM) && v.getId() > ActivityWatch.AWVERSION_ID) {
+				this.awVersion = v;
+				updateMessage = MessageFormat.format(messages.get(Keys.UPDATE_NEW_VERSION), v.getVersionNumber(), DEFAULT_DOWNLOAD_URL);
+				return;
 			}
 		}
-		return messages.get(Keys.UPDATE_NO_UPDATE);
+		updateMessage = messages.get(Keys.UPDATE_NO_UPDATE);
+		this.awVersion = null;
 	}
-	
 }

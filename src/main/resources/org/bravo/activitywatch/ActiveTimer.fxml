@@ -10,35 +10,22 @@
 <?import javafx.scene.layout.StackPane?>
 
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
-	<StackPane alignment="TOP_RIGHT">
-		<VBox fx:id="activeTimerBox" styleClass="active-timer-box" visible="false">
-			<HBox>
-				<VBox styleClass="timer-detail">
-					<VBox styleClass="timer-labels">
-						<Label fx:id="lbl_activityName"></Label>
-						<Label fx:id="lbl_activityTime"></Label>
-					</VBox>
-					<HBox styleClass="time-buttons">
-						<Button fx:id="btn_minus60" onAction="#minus60" text="-60"></Button>
-						<Button fx:id="btn_minus20" onAction="#minus20" text="-20"></Button>
-						<Button fx:id="btn_minus5" onAction="#minus5" text="-5"></Button>
-						<Button fx:id="btn_plus5" onAction="#plus5" text="+5"></Button>
-						<Button fx:id="btn_plus20" onAction="#plus20" text="+20"></Button>
-						<Button fx:id="btn_plus60" onAction="#plus60" text="+60"></Button>
-					</HBox>
-				</VBox>
-				<VBox styleClass="timer-control-box">
-					<Button fx:id="btn_toggleTimer" onAction="#toggleTimer" text="Pause"></Button>
-					<HBox styleClass="timer-toolbar">
-						<Button onAction="#renameTimer" text="R"></Button>
-						<Button onAction="#deleteTimer" text="X"></Button>
-					</HBox>
-				</VBox>
+		<VBox fx:id="activeTimerBox" styleClass="active-timer-box">
+			<HBox styleClass="timer-labels">
+				<Button fx:id="btn_toggleTimer" styleClass="btn_toggle" onAction="#toggleTimer" text=""></Button>
+				<Label fx:id="lbl_activityName"></Label>
+				<Button fx:id="btn_rename" styleClass="btn_rename" onAction="#renameTimer" text=""></Button>
+				<Region HBox.Hgrow="always"/>
+				<Label fx:id="lbl_activityTime"></Label>
+				<Button fx:id="btn_delete" styleClass="btn_delete" onAction="#deleteTimer" text=""></Button>
+			</HBox>
+			<HBox styleClass="time-buttons">
+				<Button fx:id="btn_minus60" onAction="#minus60" text="-60"></Button>
+				<Button fx:id="btn_minus20" onAction="#minus20" text="-20"></Button>
+				<Button fx:id="btn_minus5" onAction="#minus5" text="-5"></Button>
+				<Button fx:id="btn_plus5" onAction="#plus5" text="+5"></Button>
+				<Button fx:id="btn_plus20" onAction="#plus20" text="+20"></Button>
+				<Button fx:id="btn_plus60" onAction="#plus60" text="+60"></Button>
 			</HBox>
 		</VBox>
-		<VBox fx:id="simpleTimerBox" styleClass="active-timer-simple">
-			<Label fx:id="lbl_shortName"></Label>
-			<Label fx:id="lbl_shortTime"></Label>
-		</VBox>
-	</StackPane>
 </fx:root>

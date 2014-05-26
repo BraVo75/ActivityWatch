@@ -27,6 +27,7 @@ public class ActivityManager {
 	
 	private List<ActivityDO> activities;
 	
+	private SimpleLongProperty runningActivity = new SimpleLongProperty();
 	private SimpleLongProperty selectedActivity = new SimpleLongProperty();
 	private Date startTime;
 	private Thread thread;
@@ -39,7 +40,7 @@ public class ActivityManager {
 		}
 	};
 	
-	public StringProperty getSelectedActivityTimer(Long id) {
+	public StringProperty getRunningActivityTimer(Long id) {
 		if (null == id) {
 			return null;
 		}
@@ -75,8 +76,13 @@ public class ActivityManager {
 			CoreController.getInstance().saveActivities();
 	}
 	
+	public void selectActivity(final Long id) {
+		selectedActivity.setValue(id);
+	}
+	
 	public void startActivity(final Long id) {
 		stopActivity();
+		runningActivity.setValue(id);
 		getActivity(id).getRunningProperty().set(true);
 		startTime = new Date();
 //		startTime.setTime(startTime.getTime() - getActivity(id).getActivity().getElapsedMillis());
@@ -108,7 +114,7 @@ public class ActivityManager {
 		thread.setName("Runnable Time Updater");
 		thread.setDaemon(true);
 		thread.start();
-		selectedActivity.setValue(id);
+		runningActivity.setValue(id);
 	}
 	
 	public void updateTimerDisplay(final Long id) {
@@ -116,19 +122,20 @@ public class ActivityManager {
 	}
 	
 	public void stopActivity() {
-		if (selectedActivity.getValue() != 0L) {
-			getActivity(selectedActivity.getValue()).getRunningProperty().setValue(false);
+		if (runningActivity.getValue() != 0L) {
+			getActivity(runningActivity.getValue()).getRunningProperty().setValue(false);
+			runningActivity.setValue(0L);
 		}
 	}
 		
 	public void addMinutes(long minutes) {
-		getSelectedActivity().addMinutes(minutes);
-		updateTimerDisplay(selectedActivity.getValue());
+		getRunningActivity().addMinutes(minutes);
+		updateTimerDisplay(runningActivity.getValue());
 	}
 	
 	public void subtractMinutes(long minutes) {
-		getSelectedActivity().subtractMinutes(minutes);
-		updateTimerDisplay(selectedActivity.getValue());
+		getRunningActivity().subtractMinutes(minutes);
+		updateTimerDisplay(runningActivity.getValue());
 	}
 	
 	public ActivityDO getActivity(Long id) {
@@ -179,15 +186,19 @@ public class ActivityManager {
 		}
 		return filteredList;
 	}
-
-	public void selectActivity(Long id) {
-		this.selectedActivity.setValue(id);
-	}
 	
+	public ActivityDO getRunningActivity() {
+		return getActivity(runningActivity.getValue());
+	}
+
 	public ActivityDO getSelectedActivity() {
 		return getActivity(selectedActivity.getValue());
 	}
 
+	public SimpleLongProperty getRunningActivityProperty() {
+		return runningActivity;
+	}
+	
 	public SimpleLongProperty getSelectedActivityProperty() {
 		return selectedActivity;
 	}
@@ -196,10 +207,18 @@ public class ActivityManager {
 		if (getActivity(activityId).isRunning()) {
 			stopActivity();
 		}
-		if (activityId.equals(selectedActivity.getValue())) {
-			selectedActivity.setValue(0L);
-		}
+		
+		cleanupListeners();
 		activities.remove(getActivity(activityId));
+		saveActivities();
+	}
+
+	public void cleanupListeners() {
+		// kill listeners
+		long id = runningActivity.get();
+		runningActivity = new SimpleLongProperty(id);
+		id = selectedActivity.get();
+		selectedActivity = new SimpleLongProperty(id);
 	}
 	
 	public Integer getActivityCount() {

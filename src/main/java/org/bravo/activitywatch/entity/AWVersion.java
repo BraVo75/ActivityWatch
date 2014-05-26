@@ -15,11 +15,12 @@ public class AWVersion {
 	private String storeVersion;
 	private VersionPath path;
 	private URL url;
-	private enum platform {
+	private Platform platform;
+
+	public enum Platform {
 		WIN, MAC, UNIX;
 	}
 
-	
 	public enum VersionPath {
 		BETA, RELEASE;
 	}
@@ -64,4 +65,11 @@ public class AWVersion {
 		this.url = url;
 	}
 	
+	public Platform getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(Platform platform) {
+		this.platform = platform;
+	}
 }

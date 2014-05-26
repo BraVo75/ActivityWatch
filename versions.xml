@@ -5,6 +5,16 @@
 			<id>1</id>
 			<versionNumber>0.9</versionNumber>
 			<storeVersion>3</storeVersion>
+			<platform>MAC</platform>
+			<url>http://www.bra-vo.de/activitywatch/ActivityWatch_0.9.dmg</url>
+			<path>RELEASE</path>
+		</version>
+		<version>
+			<id>1</id>
+			<versionNumber>0.9</versionNumber>
+			<storeVersion>3</storeVersion>
+			<platform>WIN</platform>
+			<url>http://www.bra-vo.de/activitywatch/ActivityWatch_0.9.exe</url>
 			<path>RELEASE</path>
 		</version>
 	</versions>

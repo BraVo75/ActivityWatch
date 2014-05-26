@@ -38,19 +38,16 @@
 			</items>
 		</Menu>
 	</MenuBar>
-	<Pane fx:id="controlBox" styleClass="control-box">
-		<VBox fx:id="leftBox" styleClass="left-box">
-			<HBox styleClass="date-select">
-				<Button fx:id="btn_previousDay" onAction="#previousDay" text="&lt;"></Button>
-				<DatePicker fx:id="datePicker" onAction="#dateSelected"></DatePicker>
-				<Button fx:id="btn_nextDay" onAction="#nextDay" text="&gt;"></Button>
-			</HBox>
-			<TextField GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="txt_newActivity" onAction="#createActivity" />
-		</VBox>
-		<VBox fx:id="activeTimerLayout" styleClass="right-box" onMouseEntered="#activeTimerMouseEnter" onMouseExited="#activeTimerMouseExited"></VBox>
-	</Pane>
+	<VBox fx:id="controlBox" styleClass="control-box">
+		<HBox fx:id="topBox" styleClass="date-select">
+			<Button fx:id="btn_previousDay" onAction="#previousDay"></Button>
+			<DatePicker fx:id="datePicker" onAction="#dateSelected"></DatePicker>
+			<Button fx:id="btn_nextDay" onAction="#nextDay"></Button>
+		</HBox>
+		<TextField fx:id="txt_newActivity" onAction="#createActivity" />
+	</VBox>
 	<VBox fx:id="activitiesLayout">
-		<ListView fx:id="lst_activities" GridPane.columnIndex="0" GridPane.rowIndex="1"></ListView>
+		<ListView fx:id="lst_activities"></ListView>
 	</VBox>
 </VBox>
 

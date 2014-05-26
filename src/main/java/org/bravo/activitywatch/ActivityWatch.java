@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import org.bravo.activitywatch.entity.AWVersion;
+
 public class ActivityWatch extends Application {
 
 	public static final String PRG_NAME = "ActivityWatch";
@@ -15,6 +17,7 @@ public class ActivityWatch extends Application {
 	public static final String AWSTORE_XML = "AWStore-dev.xml";
 	public static final int AWSTORE_VERSION = 3;
 	public static final int AWVERSION_ID = 1;
+	public static final AWVersion.Platform PLATFORM = AWVersion.Platform.MAC;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -32,9 +35,9 @@ public class ActivityWatch extends Application {
 	        });
 		
 	        Scene scene = new Scene(root);
-	        primaryStage.setMinWidth(320L);
-	        primaryStage.setWidth(320L);
-	        primaryStage.setMaxWidth(320L);
+	        primaryStage.setMinWidth(300L);
+	        primaryStage.setWidth(300L);
+	        primaryStage.setMaxWidth(300L);
 	        primaryStage.setMinHeight(200L);
 	        primaryStage.setTitle(PRG_NAME);
 	        primaryStage.setScene(scene);
