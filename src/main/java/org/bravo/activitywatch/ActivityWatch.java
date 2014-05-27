@@ -35,14 +35,16 @@ public class ActivityWatch extends Application {
 	        });
 		
 	        Scene scene = new Scene(root);
-	        primaryStage.setMinWidth(300L);
-	        primaryStage.setWidth(300L);
-	        primaryStage.setMaxWidth(300L);
+//	        primaryStage.setMinWidth(300L);
+//	        primaryStage.setWidth(300L);
+//	        primaryStage.setMaxWidth(300L);
 	        primaryStage.setMinHeight(200L);
 	        primaryStage.setTitle(PRG_NAME);
 	        primaryStage.setScene(scene);
 	        scene.getStylesheets().add(ActivityWatch.class.getResource("ActivityWatch.css").toExternalForm());
 	        primaryStage.show();
+	        primaryStage.setMinWidth(primaryStage.getWidth());
+	        primaryStage.setMaxWidth(primaryStage.getWidth());
 	}
 	
 	@Override

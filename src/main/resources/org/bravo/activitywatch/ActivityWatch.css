@@ -1,8 +1,8 @@
 .root {
-	-fx-pref-width: 300;
+/*	-fx-pref-width: 300; */
 	-fx-pref-height: 300;
-	-fx-min-width: 300;
-	-fx-min-height: 200;
+/*	-fx-min-width: 300; */
+	-fx-min-height: 220;
 }
 
 #btn_delete {
@@ -60,8 +60,7 @@
 
 .control-box {
 	-fx-min-height: 80;
-	-fx-border-width: 0 1 0 0;
-	-fx-border-color: grey;
+	-fx-border-width: 0;
 	-fx-padding: 10 10 10 10;
 	-fx-spacing: 10;
 	-fx-min-width: 300;
@@ -128,19 +127,20 @@
 }
 
 .timer-labels {
-	-fx-spacing: 5;
+	-fx-spacing: 2;
 	-fx-alignment: center-left ;
 }
 
 .timer-labels #lbl_activityName {
 	-fx-wrap-text: true ;
-	-fx-font-size: 0.9em;
-	-fx-pref-height: 30;
+	-fx-font-size: 1em;
+	-fx-pref-height: 35;
 }
 
 .timer-labels #lbl_activityTime {
 	-fx-font-size:1em;
 	-fx-min-width: 60;
+	-fx-alignment: center-right ;
 }
 
 .timer-labels .button {

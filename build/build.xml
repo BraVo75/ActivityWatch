@@ -20,8 +20,18 @@
 		<mkdir dir="externalLibs" />
 		
 		<copy todir="externalLibs">
+			<fileset dir="/Applications/eclipse/plugins">
+				<filename name="org.hamcrest.core_1.1.0.v20090501071000.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
 				<filename name="controlsfx-8.0.4.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="/Applications/eclipse/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900">
+				<filename name="junit.jar"/>	
 			</fileset>
 		</copy>
 		
@@ -29,6 +39,11 @@
 		<copy todir="project">
 			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
 				<include name="src/main/resources/**" />
+			</fileset>
+		</copy>
+		<copy todir="project">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<include name="src/main/test/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
@@ -48,6 +63,8 @@
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
+				<include name="junit.jar"/>
+				<include name="org.hamcrest.core_1.1.0.v20090501071000.jar"/>
 				<include name="controlsfx-8.0.4.jar"/>
 			</fileset>
 		</copy>
@@ -55,6 +72,11 @@
 		<!-- Copy project references -->
 	
 		<!-- Copy project sources itself -->
+		<copy todir="build/src">
+			<fileset dir="project/src/main/test">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 		<copy todir="build/src">
 			<fileset dir="project/src/main/resources">
 				<include name="**/*"/>
@@ -76,6 +98,9 @@
 		
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
+		<fileset dir="project/src/main/test">
+			<exclude name="**/*.java"/>
+		</fileset>
 		<fileset dir="project/src/main/resources">
 			<exclude name="**/*.java"/>
 		</fileset>
@@ -124,7 +149,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="VolkerBraun"/>
 				<attribute name="Implementation-Title" value=""/>
-				<attribute name="Implementation-Version" value="0.9b2"/>
+				<attribute name="Implementation-Version" value="0.9"/>
 			</manifest>
 		</fx:jar>
 		
