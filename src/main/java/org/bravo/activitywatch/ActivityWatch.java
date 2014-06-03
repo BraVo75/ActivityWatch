@@ -12,11 +12,14 @@ import org.bravo.activitywatch.entity.AWVersion;
 
 public class ActivityWatch extends Application {
 
+	/* Application Properties
+	 * Should be more comfortable for platform dependent builds
+	 */
 	public static final String PRG_NAME = "ActivityWatch";
-	public static final String PRG_VERSION = "0.9";
-	public static final String AWSTORE_XML = "AWStore-dev.xml";
+	public static final String PRG_VERSION = "0.10";
+	public static final String AWSTORE_XML = "AWStore.xml";
 	public static final int AWSTORE_VERSION = 3;
-	public static final int AWVERSION_ID = 1;
+	public static final int AWVERSION_ID = 2;
 	public static final AWVersion.Platform PLATFORM = AWVersion.Platform.MAC;
 	
 	@Override
@@ -54,6 +57,7 @@ public class ActivityWatch extends Application {
 	}
 
 	public static void main(String[] args) {
+//		System.out.println("Is Mac "+SystemUtils.IS_OS_MAC);
 		launch(args);
 	}
 }

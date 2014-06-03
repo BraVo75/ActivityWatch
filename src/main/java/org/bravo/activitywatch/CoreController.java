@@ -25,6 +25,7 @@ import org.bravo.activitywatch.entity.AWVersion;
 import org.bravo.activitywatch.entity.AWVersions;
 import org.bravo.activitywatch.entity.Activity;
 import org.bravo.activitywatch.entity.Settings;
+import org.bravo.activitywatch.entity.Settings.TimeFormat;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -101,6 +102,10 @@ public class CoreController {
 	private void initFirstRun() {
 		store = new AWStore();
 		settings = new Settings();
+		settings.setAlwaysOnTop(false);
+		settings.setCountersVisible(true);
+		settings.setStatusBarVisible(false);
+		settings.setTimeFormat(TimeFormat.TIME);
 		store.setSettings(settings);
 		store.setVersion(ActivityWatch.AWSTORE_VERSION);
 		store.setActivities(new ArrayList<Activity>());
@@ -109,7 +114,7 @@ public class CoreController {
 	private void migrateStore() {
 		if( store.getVersion() == 0 ) {
 			store.getSettings().setCountersVisible(true);
-			store.getSettings().setStatusBarVisible(true);
+			store.getSettings().setStatusBarVisible(false);
 			store.getSettings().setAlwaysOnTop(false);
 			store.setVersion(1);
 		}
@@ -120,10 +125,12 @@ public class CoreController {
 				a.setId(id);
 				id++;
 			}
+			store.setVersion(2);
 		}
 		
 		if( store.getVersion() == 2) {
-			store.getSettings().setTimeFormat(Settings.TimeFormat.TIME);
+			store.getSettings().setTimeFormat(TimeFormat.TIME);
+			store.setVersion(3);
 		}
 	}
 	

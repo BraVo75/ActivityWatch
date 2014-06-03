@@ -148,8 +148,8 @@
 			
 			<manifest>
 				<attribute name="Implementation-Vendor" value="VolkerBraun"/>
-				<attribute name="Implementation-Title" value=""/>
-				<attribute name="Implementation-Version" value="0.9"/>
+				<attribute name="Implementation-Title" value="ActivityWatch"/>
+				<attribute name="Implementation-Version" value="0.10"/>
 			</manifest>
 		</fx:jar>
 		

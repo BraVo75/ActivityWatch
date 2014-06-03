@@ -1,0 +1,82 @@
+
+ ActivityWatch Changelog
+-------------------------
+
+
+ 0.10
+------
+
+Bugfix:
+
+* AW startup now works again on new installations.
+
+
+ 0.9
+-----
+
+New Features:
+
+* Display of elapsed time can be switched to decimal format.
+
+* Activities can be added with a time value after the description. Format example "Doing stuff 2h14m13s" will add an activity with description "Doing stuff" with 02:14:13 elapsed time.
+
+* Check for new ActivityWatch version added.
+
+* Usability improved with new design.
+
+* Autosave after adding or removing activities.
+
+* Mac Retina Support.
+
+* Timer keeps running if the day is changed.
+
+
+Bugfix:
+
+* Date display is updated after selecting a new Date from the calendar.
+
+
+Removed:
+
+* Java Webstart removed because of security issues.
+
+* Message if activity added at another day than the actual.
+
+* Temporarily removed minimize to tray icon. Will come back soon.
+
+* Temporarily removed always on top feature. Will come back soon.
+
+* Removed hide time feature.
+
+* Removed status bar.
+
+
+Under the Hood:
+
+* Switch from Java 6 to Java 8
+
+* Switch from Swing to JavaFX
+
+
+ 0.8
+-----
+
+New features:
+
+* Minimize to tray icon
+
+
+ 0.7
+-----
+
+New features:
+
+* Java Webstart.
+
+* Moved AWStore to Home directory of user.
+
+
+ 0.6
+-----
+
+...a long time ago...
