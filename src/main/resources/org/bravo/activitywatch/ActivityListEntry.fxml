@@ -15,6 +15,7 @@
 	<VBox fx:id="rowLayout">
 		<HBox fx:id="listbox" styleClass="listbox" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" onMouseClicked="#mouseClicked">
 			<Label fx:id="lbl_name"></Label>
+			<Button fx:id="btn_rename" styleClass="btn_rename" onAction="#renameTimer" text=""></Button>
 			<Region HBox.hgrow="ALWAYS" maxWidth="999999"></Region>
 			<Label fx:id="lbl_time"></Label>
 			<Button fx:id="btn_delete" styleClass="btn_delete" onAction="#deleteTimer" text=""></Button>

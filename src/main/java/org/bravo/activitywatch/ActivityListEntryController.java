@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import org.bravo.activitywatch.entity.Activity;
+import org.bravo.activitywatch.events.RefreshEvent;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -41,6 +42,7 @@ public class ActivityListEntryController extends VBox {
 	@FXML private VBox rowLayout;
 	@FXML private Button btn_delete;
 	@FXML private HBox timerLayout;
+	@FXML private Button btn_rename;
 	
 	private Long activityId;
 	private ContextMenu contextMenu;
@@ -64,7 +66,7 @@ public class ActivityListEntryController extends VBox {
 		setupUIControls();
 		setupListeners();
 		
-		if (activityManager.getActivity(activityId).getTimeProperty().getValue() != "") {
+		if (activityManager.getActivity(activityId).getTimeProperty().getValue() != null) {
 			lbl_time.setText(TimeConverter.autoconvert(Long.valueOf(activityManager.getActivity(activityId).getTimeProperty().getValue())));
 		}
 	}
@@ -112,6 +114,7 @@ public class ActivityListEntryController extends VBox {
 	protected void deleteTimer() {
 		removeListeners();
 		activityManager.removeActivity(activityId);
+		TrayMenu.getInstance().updateTrayMenu();
 		fireRefresh();
 	}
 	
@@ -138,6 +141,7 @@ public class ActivityListEntryController extends VBox {
 	
 	public void stopTimer() {
 		activityManager.stopActivity();
+		TrayMenu.getInstance().updateTrayMenu();
 	}
 	
 	private void setupUIControls() {
@@ -153,7 +157,7 @@ public class ActivityListEntryController extends VBox {
 		rowLayout.getChildren().clear();
 		rowLayout.getChildren().add(listbox);
 		lbl_name.setText(getActivity().getName());
-		if (activityManager.getActivity(activityId).getTimeProperty().getValue() != "") {
+		if (activityManager.getActivity(activityId).getTimeProperty().getValue() != null) {
 			lbl_time.setText(TimeConverter.autoconvert(Long.valueOf(activityManager.getActivity(activityId).getTimeProperty().getValue())));
 		}
 		HBox.setHgrow(lbl_time, Priority.ALWAYS);
@@ -166,6 +170,9 @@ public class ActivityListEntryController extends VBox {
 		
 		Tooltip t = new Tooltip(getActivity().getName());
 		lbl_name.setTooltip(t);
+
+		Image imageRename = new Image(getClass().getResourceAsStream("images/pencil_icon&24.png"),12,12,false,false);
+		btn_rename.setGraphic(new ImageView(imageRename));
 		
 		Image imageDelete = new Image(getClass().getResourceAsStream("images/delete_icon&24.png"),12,12,false,false);
 		btn_delete.setGraphic(new ImageView(imageDelete));
@@ -206,7 +213,8 @@ public class ActivityListEntryController extends VBox {
 		contextMenu.getItems().add(cmDelete);
 	}
 
-	private void renameTimer() {
+	@FXML
+	protected void renameTimer() {
 		String response = Dialogs.create()
 				.title("Rename")
 				.message("Rename Activity")
@@ -217,11 +225,13 @@ public class ActivityListEntryController extends VBox {
 			activityManager.getActivity(activityId).getActivity().setName(response);
 			lbl_name.setText(response);
 		}
+		TrayMenu.getInstance().updateTrayMenu();
 		fireRefresh();
 	}
 	
 	public void start() {
 		activityManager.startActivity(activityId);
+		TrayMenu.getInstance().updateTrayMenu();
 	}
 	
 	private boolean isSelectedActivity() {

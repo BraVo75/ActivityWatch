@@ -101,18 +101,21 @@
 	-fx-opacity: 1;
 }
 
-.listbox #btn_delete {
+.listbox #btn_delete,
+.listbox #btn_rename {
 	-fx-opacity: 0;
 	-fx-background-color: transparent;
 	-fx-opacity: 0;
 	-fx-padding: 0 0 0 2;
 }
 
-.listbox:hover #btn_delete {
+.listbox:hover #btn_delete,
+.listbox:hover #btn_rename {
 	-fx-opacity: 0.3;
 }
 
-.listbox #btn_delete:hover {
+.listbox #btn_delete:hover,
+.listbox #btn_rename:hover {
 	-fx-opacity: 1;
 }
 
@@ -209,4 +212,20 @@
 	-fx-max-width: 300;
 	-fx-pref-width: 200;
 	-fx-min-width: 200;
+}
+
+#sumLayout {
+	-fx-max-width: 300;
+}
+
+#sumLayout #lbl_totalValue {
+	-fx-min-width: 20;
+	-fx-text-alignment: right;
+	-fx-padding: 0 10 0 10;
+}
+
+#sumLayout #lbl_total {
+	-fx-max-width: 200;
+	-fx-text-alignment: left;
+	-fx-padding: 0 10 0 10;
 }

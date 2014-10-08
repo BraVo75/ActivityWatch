@@ -11,7 +11,6 @@ import java.util.List;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.StringProperty;
 
 import org.bravo.activitywatch.entity.Activity;
 import org.bravo.activitywatch.entity.ActivityDO;
@@ -29,6 +28,7 @@ public class ActivityManager {
 	
 	private SimpleLongProperty runningActivity = new SimpleLongProperty();
 	private SimpleLongProperty selectedActivity = new SimpleLongProperty();
+	
 	private Date startTime;
 	private Thread thread;
 	
@@ -40,7 +40,7 @@ public class ActivityManager {
 		}
 	};
 	
-	public StringProperty getRunningActivityTimer(Long id) {
+	public SimpleLongProperty getRunningActivityTimer(Long id) {
 		if (null == id) {
 			return null;
 		}
@@ -82,8 +82,6 @@ public class ActivityManager {
 	
 	public void startActivity(final Long id) {
 		stopActivity();
-		runningActivity.setValue(id);
-		getActivity(id).getRunningProperty().set(true);
 		startTime = new Date();
 //		startTime.setTime(startTime.getTime() - getActivity(id).getActivity().getElapsedMillis());
 
@@ -115,6 +113,8 @@ public class ActivityManager {
 		thread.setDaemon(true);
 		thread.start();
 		runningActivity.setValue(id);
+		getActivity(id).getRunningProperty().set(true);
+//		System.out.println("Started "+runningActivity.longValue());
 	}
 	
 	public void updateTimerDisplay(final Long id) {
@@ -123,19 +123,20 @@ public class ActivityManager {
 	
 	public void stopActivity() {
 		if (runningActivity.getValue() != 0L) {
+//			System.out.println("Stopped "+runningActivity.getValue());
 			getActivity(runningActivity.getValue()).getRunningProperty().setValue(false);
 			runningActivity.setValue(0L);
 		}
 	}
 		
 	public void addMinutes(long minutes) {
-		getRunningActivity().addMinutes(minutes);
-		updateTimerDisplay(runningActivity.getValue());
+		getSelectedActivity().addMinutes(minutes);
+		updateTimerDisplay(selectedActivity.getValue());
 	}
 	
 	public void subtractMinutes(long minutes) {
-		getRunningActivity().subtractMinutes(minutes);
-		updateTimerDisplay(runningActivity.getValue());
+		getSelectedActivity().subtractMinutes(minutes);
+		updateTimerDisplay(selectedActivity.getValue());
 	}
 	
 	public ActivityDO getActivity(Long id) {

@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import org.bravo.activitywatch.entity.AWVersion;
+import org.bravo.activitywatch.entity.AWVersion.Platform;
 
 public class ActivityWatch extends Application {
 
@@ -16,11 +17,13 @@ public class ActivityWatch extends Application {
 	 * Should be more comfortable for platform dependent builds
 	 */
 	public static final String PRG_NAME = "ActivityWatch";
-	public static final String PRG_VERSION = "0.10";
+	public static final String PRG_VERSION = "0.11";
 	public static final String AWSTORE_XML = "AWStore.xml";
 	public static final int AWSTORE_VERSION = 3;
-	public static final int AWVERSION_ID = 2;
+	public static final int AWVERSION_ID = 3;
 	public static final AWVersion.Platform PLATFORM = AWVersion.Platform.MAC;
+
+	private TrayMenu trayMenu = TrayMenu.getInstance();
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -38,9 +41,10 @@ public class ActivityWatch extends Application {
 	        });
 		
 	        Scene scene = new Scene(root);
-//	        primaryStage.setMinWidth(300L);
-//	        primaryStage.setWidth(300L);
-//	        primaryStage.setMaxWidth(300L);
+	        
+	        // Show icon in Window Headline
+//	        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/aw-logo-64.png"),64,64,false,false));
+	        
 	        primaryStage.setMinHeight(200L);
 	        primaryStage.setTitle(PRG_NAME);
 	        primaryStage.setScene(scene);
@@ -48,16 +52,26 @@ public class ActivityWatch extends Application {
 	        primaryStage.show();
 	        primaryStage.setMinWidth(primaryStage.getWidth());
 	        primaryStage.setMaxWidth(primaryStage.getWidth());
+	        
+	        javafx.application.Platform.setImplicitExit(false);
+	        
+	        // add MAC style. Experimental
+	        if(PLATFORM.equals(Platform.MAC)) {
+//	        	AquaFx.style();
+	        }
+			trayMenu.createTrayIcon(primaryStage);
 	}
 	
 	@Override
 	public void stop() throws Exception {
 		ActivityManager.getInstance().saveActivities();
-		super.stop();
+		super.stop(); // for JavaFX Shutdown
+		System.exit(0); // for AWT Shutdown
 	}
 
 	public static void main(String[] args) {
 //		System.out.println("Is Mac "+SystemUtils.IS_OS_MAC);
 		launch(args);
 	}
+	
 }

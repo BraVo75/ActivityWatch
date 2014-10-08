@@ -1,11 +1,11 @@
-package org.bravo.activitywatch;
+package org.bravo.activitywatch.events;
 
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 
 
-class RefreshEvent extends Event {
+public class RefreshEvent extends Event {
     
 	private static final long serialVersionUID = 1L;
 	

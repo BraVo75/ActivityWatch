@@ -5,8 +5,6 @@ package org.bravo.activitywatch;
 
 import java.io.IOException;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -18,6 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
+import org.bravo.activitywatch.events.RefreshEvent;
+import org.bravo.activitywatch.events.TimeUpdateEvent;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -36,8 +36,8 @@ public class ActiveTimerController extends VBox {
 	private Image imageStart;
 	private Image imageStop;
 	private ChangeListener<Boolean> runningListener;
-	private ChangeListener<String> timeListener;
-	private InvalidationListener selectedListener;
+	private ChangeListener<Number> timeListener;
+//	private InvalidationListener selectedListener;
 	private Long selectedActivity;
 //	private FadeTransition ft;
 	
@@ -70,16 +70,14 @@ public class ActiveTimerController extends VBox {
 
 	private void setupListeners() {
         
-//		System.out.println("init Listener for "+selectedActivity);
-//		activityManager.getActivity(9999L).getActivity();
-		
-		selectedListener = new InvalidationListener() {
-			
-			@Override
-			public void invalidated(Observable arg0) {
-				changeSelectedActivity();
-			}
-		};	
+//		selectedListener = new InvalidationListener() {
+//			
+//			@Override
+//			public void invalidated(Observable arg0) {
+//				System.out.println("ATC selection changed");
+//				changeSelectedActivity();
+//			}
+//		};	
 		
 		runningListener = new ChangeListener<Boolean>() {
 			
@@ -87,21 +85,28 @@ public class ActiveTimerController extends VBox {
 			public void changed(ObservableValue<? extends Boolean> observable,
 					Boolean oldValue, Boolean newValue) {
 				setButtonStatus(newValue);
+				if (newValue) {
+					TrayMenu.getInstance().setTrayIcon(TrayMenu.Icon.RUNNING);
+				}
+				else {
+					TrayMenu.getInstance().setTrayIcon(TrayMenu.Icon.STOPPED);
+				}
 			}
 			
 		};
 		
-	    timeListener = new ChangeListener<String>() {
+	    timeListener = new ChangeListener<Number>() {
 
 			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
+			public void changed(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) {
 //				System.out.println(TimeConverter.autoconvert(Long.valueOf(oldValue))+"->"+TimeConverter.autoconvert(Long.valueOf(newValue)));
-				lbl_activityTime.setText(TimeConverter.autoconvert(Long.valueOf(newValue)));
+				lbl_activityTime.setText(TimeConverter.autoconvert(newValue.longValue()));
+				fireEvent(new TimeUpdateEvent());
 			}
 		};
 
-		activityManager.getSelectedActivityProperty().addListener(selectedListener);
+//		activityManager.getSelectedActivityProperty().addListener(selectedListener);
 		activityManager.getSelectedActivity().getTimeProperty().addListener(timeListener);
 		activityManager.getSelectedActivity().getRunningProperty().addListener(runningListener);
 	}
@@ -118,6 +123,7 @@ public class ActiveTimerController extends VBox {
 		else {
 			start();
 		}
+		TrayMenu.getInstance().updateTrayMenu();
 	}
 	
 	@FXML
@@ -125,6 +131,7 @@ public class ActiveTimerController extends VBox {
 		removeListeners();
 		activityManager.removeActivity(activityManager.getSelectedActivityProperty().getValue());
 		selectedActivity=null;
+		TrayMenu.getInstance().updateTrayMenu();
 		this.fireEvent(new RefreshEvent());
 	}
 	
@@ -140,6 +147,7 @@ public class ActiveTimerController extends VBox {
 			activityManager.getSelectedActivity().getActivity().setName(response);
 			lbl_activityName.setText(response);
 		}
+		TrayMenu.getInstance().updateTrayMenu();
 	}
 	
 	@FXML
@@ -175,6 +183,7 @@ public class ActiveTimerController extends VBox {
 	public void stopTimer() {
 		activityManager.stopActivity();
 		setButtonStatus(false);
+		TrayMenu.getInstance().setTrayIcon(TrayMenu.Icon.STOPPED);
 	}
 	
 	public void changeSelectedActivity() {
@@ -191,15 +200,15 @@ public class ActiveTimerController extends VBox {
 				start();
 			}
 
-			if (activityManager.getSelectedActivity().getTimeProperty().getValue() != "") {
-				lbl_activityTime.setText(TimeConverter.convertToTime(Long.valueOf(activityManager.getSelectedActivity().getTimeProperty().getValue())));
+			if (activityManager.getSelectedActivity().getTimeProperty().getValue() != null) {
+				lbl_activityTime.setText(TimeConverter.convertToTime(activityManager.getSelectedActivity().getTimeProperty().longValue()));
 			}
 			setupListeners();
 		}
 	}
 
 	private void removeListeners() {
-		activityManager.getSelectedActivityProperty().removeListener(selectedListener);
+//		activityManager.getSelectedActivityProperty().removeListener(selectedListener);
 		if (null != selectedActivity) {
 			activityManager.getActivity(selectedActivity).getRunningProperty().removeListener(runningListener);
 			activityManager.getActivity(selectedActivity).getTimeProperty().removeListener(timeListener);
@@ -209,6 +218,7 @@ public class ActiveTimerController extends VBox {
 	public void start() {
 		setButtonStatus(true);
 		activityManager.startActivity(activityManager.getSelectedActivity().getActivity().getId());
+		TrayMenu.getInstance().setTrayIcon(TrayMenu.Icon.RUNNING);
 	}
 	
 	private void setButtonStatus(boolean running) {

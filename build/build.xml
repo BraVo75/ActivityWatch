@@ -20,8 +20,18 @@
 		<mkdir dir="externalLibs" />
 		
 		<copy todir="externalLibs">
+			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
+				<filename name="commons-lang3-3.3.2.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="/Applications/eclipse/plugins/org.junit_4.11.0.v201303080030">
+				<filename name="junit.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="/Applications/eclipse/plugins">
-				<filename name="org.hamcrest.core_1.1.0.v20090501071000.jar"/>	
+				<filename name="org.hamcrest.core_1.3.0.v201303031735.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -29,21 +39,16 @@
 				<filename name="controlsfx-8.0.4.jar"/>	
 			</fileset>
 		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="/Applications/eclipse/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900">
-				<filename name="junit.jar"/>	
-			</fileset>
-		</copy>
 		
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
-				<include name="src/main/resources/**" />
+				<include name="src/main/test/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
 			<fileset dir="/Users/volkerb/privat/dev/workspace/ActivityWatch">
-				<include name="src/main/test/**" />
+				<include name="src/main/resources/**" />
 			</fileset>
 		</copy>
 		<copy todir="project">
@@ -63,8 +68,9 @@
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
+				<include name="commons-lang3-3.3.2.jar"/>
+				<include name="org.hamcrest.core_1.3.0.v201303031735.jar"/>
 				<include name="junit.jar"/>
-				<include name="org.hamcrest.core_1.1.0.v20090501071000.jar"/>
 				<include name="controlsfx-8.0.4.jar"/>
 			</fileset>
 		</copy>
@@ -147,9 +153,10 @@
 			<fx:resources refid="appRes"/>
 			
 			<manifest>
-				<attribute name="Implementation-Vendor" value="VolkerBraun"/>
+				<attribute name="Implementation-Vendor" value="Volker Braun"/>
 				<attribute name="Implementation-Title" value="ActivityWatch"/>
-				<attribute name="Implementation-Version" value="0.10"/>
+				<attribute name="Implementation-Version" value="0.11"/>
+				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
 		
@@ -165,7 +172,7 @@
 			outfile="ActivityWatch" nativeBundles="dmg"
 			updatemode="background" >
 	
-			<fx:info title="ActivityWatch" vendor="VolkerBraun"/>
+			<fx:info title="ActivityWatch" vendor="Volker Braun"/>
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
 		</fx:deploy>

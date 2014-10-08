@@ -2,6 +2,23 @@
  ActivityWatch Changelog
 -------------------------
 
+ 0.11
+------
+
+New features:
+
+* Now you can see in the taskbar, if a timer is running.
+* Switching between activities via taskbar menu.
+* Total of all activity times in one day is displayed at the end of the activity list.
+* Present day has now a different color in the date selection.
+* Changed timeout for updatecheck if no connection is available.
+* Default text on activity input field.
+* Added rename icon for unselected activities.
+
+Bugfix:
+
+* Elapsed time changes are now possible at a stopped timer
+
 
  0.10
 ------

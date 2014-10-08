@@ -1,15 +1,17 @@
 package org.bravo.activitywatch.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleLongProperty;
 
 public class ActivityDO {
 	
 	private Activity activity;
-	private SimpleStringProperty timeProperty = new SimpleStringProperty("");
+	private SimpleLongProperty timeProperty = new SimpleLongProperty(0L);
 	private BooleanProperty running = new SimpleBooleanProperty(false);
 
 	public ActivityDO(Activity activity) {
@@ -25,20 +27,20 @@ public class ActivityDO {
 		this.activity = activity;
 	}
 
-	public SimpleStringProperty getTimeProperty() {
+	public SimpleLongProperty getTimeProperty() {
 		return timeProperty;
 	}
 
-	public void setTimeProperty(SimpleStringProperty time) {
+	public void setTimeProperty(SimpleLongProperty time) {
 		this.timeProperty = time;
 	}
 	
 	public void updateTimeProperty() {
-		updateTimeProperty(activity.getElapsedMillis().toString());
+		updateTimeProperty(activity.getElapsedMillis());
 	}
 	
-	public void updateTimeProperty(final String formattedTime) {
-    	timeProperty.setValue(formattedTime);
+	public void updateTimeProperty(final Long time) {
+    	timeProperty.setValue(time);
 	}
 	
 	public BooleanProperty getRunningProperty() {
@@ -73,5 +75,9 @@ public class ActivityDO {
 		addMinutes(time.getMinute());
 		addSeconds(time.getSecond());
 		updateTimeProperty();
+	}
+	
+	public LocalDate getStartDate() {
+		return activity.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 }

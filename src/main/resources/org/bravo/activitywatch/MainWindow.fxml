@@ -49,5 +49,10 @@
 	<VBox fx:id="activitiesLayout">
 		<ListView fx:id="lst_activities"></ListView>
 	</VBox>
+	<HBox fx:id="sumLayout">
+		<Label fx:id="lbl_total"></Label>
+		<Region HBox.hgrow="ALWAYS" maxWidth="999999"></Region>
+		<Label fx:id="lbl_totalValue"></Label>
+	</HBox>
 </VBox>
 

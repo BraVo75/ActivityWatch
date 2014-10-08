@@ -206,6 +206,7 @@ public class CoreController {
 		try {
 			url = new URL(UPDATE_URL);
 			connection = url.openConnection();
+			connection.setConnectTimeout(2000);
 			context = JAXBContext.newInstance(AWVersions.class);
 			Unmarshaller um = context.createUnmarshaller();
 			versions = (AWVersions) um.unmarshal(connection.getInputStream());

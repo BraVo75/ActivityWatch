@@ -4,12 +4,16 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javafx.application.Platform;
+import javafx.beans.binding.LongBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,8 +29,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import org.bravo.activitywatch.Messages.Keys;
 import org.bravo.activitywatch.entity.ActivityDO;
 import org.bravo.activitywatch.entity.Settings.TimeFormat;
+import org.bravo.activitywatch.events.RefreshEvent;
 import org.controlsfx.dialog.Dialogs;
 
 public class MainWindowController {
@@ -41,13 +47,20 @@ public class MainWindowController {
 	@FXML private CheckMenuItem formatDecimal;
 	@FXML private Button btn_previousDay;
 	@FXML private Button btn_nextDay;
+	@FXML private Label lbl_total;
+	@FXML private Label lbl_totalValue;
+	
+	private static final String ACTIVITY_INPUT_DEFAULT_TEXT = "What are you doing?";
 	
 	private ActivityManager activityManager = ActivityManager.getInstance();
 	private LocalDate selectedDate;
 	private Messages messages = Messages.getInstance();
 	private SettingsManager settings = SettingsManager.getInstance();
 	private CoreController core = CoreController.getInstance();
+	private LongBinding total;
+	private ObservableList<ActivityDO> observableActivities;
 	
+
 	@FXML
 	protected void initialize() {
 		selectedDate = LocalDate.now();
@@ -57,18 +70,30 @@ public class MainWindowController {
 	private void setupUI() {
 		Tooltip t = new Tooltip("Enter your activity here");
 		txt_newActivity.setTooltip(t);
+		txt_newActivity.setPromptText(ACTIVITY_INPUT_DEFAULT_TEXT);
 		formatTime.setSelected(settings.getTimeFormat().equals(TimeFormat.TIME));
 		formatDecimal.setSelected(settings.getTimeFormat().equals(TimeFormat.DECIMAL));
 		Image imagePrevDay = new Image(getClass().getResourceAsStream("images/br_prev_icon&16.png"),16,16,false,false);
 		btn_previousDay.setGraphic(new ImageView(imagePrevDay));
 		Image imageNextDay = new Image(getClass().getResourceAsStream("images/br_next_icon&16.png"),16,16,false,false);
 		btn_nextDay.setGraphic(new ImageView(imageNextDay));
+		lbl_total.setText(messages.get(Keys.MAIN_TOTAL));
 		if (core.isUpdateAvailable()) {
 			showUpdateInfo();
 		}
+		updateDatePicker();
+		initFocusPolicy();
+		txt_newActivity.getParent().requestFocus();
+	}
+
+	private void updateDatePicker() {
 		datePicker.setValue(selectedDate);
-		
-		initFocusPolicy();  
+		if (selectedDate.equals(LocalDate.now())) {
+			datePicker.getEditor().setStyle("-fx-background-color: #e0f0ff;");
+		}
+		else {
+			datePicker.getEditor().setStyle("-fx-background-color: white;");
+		}
 	}
 
 	private void initFocusPolicy() {
@@ -121,9 +146,16 @@ public class MainWindowController {
 		if (activities == null) {
 			return;
 		}
+		observableActivities = FXCollections.observableList(new ArrayList<ActivityDO>());
+		observableActivities.addAll(activities);
 		for (ActivityDO a : activities) {
 			lst_activities.getItems().add(createActivityListEntry(a.getActivity().getId()));
 		}
+		total = new TotalBinding(observableActivities);
+		lbl_totalValue.setText(TimeConverter.autoconvert(total.longValue()));
+        total.addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            lbl_totalValue.setText(TimeConverter.autoconvert(newValue.longValue()));
+        });
 	}
 	
 	@FXML
@@ -131,11 +163,11 @@ public class MainWindowController {
 		Dialogs.create()
 			      .title(messages.get(Messages.Keys.ABOUT_TITLE))
 			      .masthead(ActivityWatch.PRG_NAME)
-			      .message( messages.get(Messages.Keys.ABOUT_VERSION) +": "+ActivityWatch.PRG_VERSION+"\n" +
-			    		  messages.get(Messages.Keys.ABOUT_JAVA) +": " + System.getProperty("java.version")
-			    		  +" on "+System.getProperty("os.name")
-			    		  +" "+System.getProperty("os.version")
-			    		  +" "+System.getProperty("os.arch")
+			      .message( messages.get(Messages.Keys.ABOUT_VERSION) +": "+ActivityWatch.PRG_VERSION
+//			    		  messages.get(Messages.Keys.ABOUT_JAVA) +": " + System.getProperty("java.version")
+//			    		  +" on "+System.getProperty("os.name")
+//			    		  +" "+System.getProperty("os.version")
+//			    		  +" "+System.getProperty("os.arch")
 			    		  +"\n\n"
 			    		  +messages.get(Messages.Keys.ABOUT_ACTIVITIES_IN_DB) +": "+activityManager.getActivityCount()
 			    		  +"\n\n"
@@ -181,7 +213,7 @@ public class MainWindowController {
 	
 	private void updateDisplay() {
 		populateActivityList(activityManager.getActivities(selectedDate));
-		datePicker.setValue(selectedDate);
+		updateDatePicker();
 		txt_newActivity.requestFocus();
 	}
 	
@@ -203,6 +235,9 @@ public class MainWindowController {
         	activityManager.startActivity(id);
         	activityManager.selectActivity(id);
         }
+        
+        observableActivities.add(activityManager.getActivity(id));
+        TrayMenu.getInstance().updateTrayMenu();
         saveStore();
 	}
 
@@ -222,6 +257,9 @@ public class MainWindowController {
 	private void removeActivities() {
 		lst_activities.getItems().clear();
 		activityManager.cleanupListeners();
+		if (total != null) {
+			total.dispose();
+		}
 	}
 	
 	private Date localDate2Date(LocalDate ld) {
@@ -232,5 +270,4 @@ public class MainWindowController {
 	public void handleWindowShownEvent() {
 		txt_newActivity.requestFocus();
 	}
-
 }

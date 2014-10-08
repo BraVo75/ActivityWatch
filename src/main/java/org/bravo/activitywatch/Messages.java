@@ -26,7 +26,13 @@ public class Messages {
 		
 		UPDATE_CONNECT_ERROR,
 		UPDATE_NEW_VERSION,
-		UPDATE_NO_UPDATE
+		UPDATE_NO_UPDATE,
+		
+		TRAY_MENU_QUIT,
+		TRAY_MENU_SHOW,
+		TRAY_MENU_STOP,
+		
+		MAIN_TOTAL
 	}
 
 	private final static Messages instance = new Messages();
