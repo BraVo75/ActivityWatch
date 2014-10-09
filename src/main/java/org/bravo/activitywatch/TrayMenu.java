@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import org.bravo.activitywatch.Messages.Keys;
+import org.bravo.activitywatch.entity.AWVersion.Platform;
 import org.bravo.activitywatch.entity.ActivityDO;
 
 /**
@@ -29,10 +30,22 @@ import org.bravo.activitywatch.entity.ActivityDO;
 public class TrayMenu {
 	
 	private static final TrayMenu instance = new TrayMenu();
-	private static final String AW_ICON = "images/aw-logo-64.png";
-	private static final String AW_RUNNING_ICON = "images/aw-logo-running-64.png";
+	private static final String AW_ICON_HIGHRES = "images/aw-logo-64.png";
+	private static final String AW_RUNNING_ICON_HIGHRES = "images/aw-logo-running-64.png";
+	private static final String AW_ICON_LORES = "images/aw-logo-16.png";
+	private static final String AW_RUNNING_ICON_LORES = "images/aw-logo-running-16.png";
+	private String aw_icon;
+	private String aw_running_icon;
 	
 	private TrayMenu() {
+		if (ActivityWatch.PLATFORM == Platform.MAC) {
+			aw_icon = AW_ICON_HIGHRES;
+			aw_running_icon = AW_RUNNING_ICON_HIGHRES;
+		}
+		else {
+			aw_icon = AW_ICON_LORES;
+			aw_running_icon = AW_RUNNING_ICON_LORES;
+		}
 	}
 	
 	public static final TrayMenu getInstance() {
@@ -54,11 +67,11 @@ public class TrayMenu {
 	public void setTrayIcon(Icon icon) {
 		if (SystemTray.isSupported()) {
 			if (icon.equals(Icon.STOPPED)) {
-				java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(AW_ICON));
+				java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(aw_icon));
 				trayIcon.setImage(image);
 			}
 			if (icon.equals(Icon.RUNNING)) {
-				java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(AW_RUNNING_ICON));
+				java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(aw_running_icon));
 				trayIcon.setImage(image);
 			}
 		}
@@ -69,7 +82,7 @@ public class TrayMenu {
 			// get the SystemTray instance
 			SystemTray tray = SystemTray.getSystemTray();
 			// load an image
-			java.awt.Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(AW_ICON));
+			java.awt.Image image= Toolkit.getDefaultToolkit().getImage(getClass().getResource(aw_icon));
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent t) {

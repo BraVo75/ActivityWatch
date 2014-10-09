@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.bravo.activitywatch.entity.AWVersion;
 import org.bravo.activitywatch.entity.AWVersion.Platform;
 
@@ -21,7 +22,7 @@ public class ActivityWatch extends Application {
 	public static final String AWSTORE_XML = "AWStore.xml";
 	public static final int AWSTORE_VERSION = 3;
 	public static final int AWVERSION_ID = 3;
-	public static final AWVersion.Platform PLATFORM = AWVersion.Platform.MAC;
+	public static AWVersion.Platform PLATFORM;// = AWVersion.Platform.MAC;
 
 	private TrayMenu trayMenu = TrayMenu.getInstance();
 	
@@ -56,9 +57,9 @@ public class ActivityWatch extends Application {
 	        javafx.application.Platform.setImplicitExit(false);
 	        
 	        // add MAC style. Experimental
-	        if(PLATFORM.equals(Platform.MAC)) {
+//	        if(PLATFORM.equals(Platform.MAC)) {
 //	        	AquaFx.style();
-	        }
+//	        }
 			trayMenu.createTrayIcon(primaryStage);
 	}
 	
@@ -70,7 +71,14 @@ public class ActivityWatch extends Application {
 	}
 
 	public static void main(String[] args) {
-//		System.out.println("Is Mac "+SystemUtils.IS_OS_MAC);
+		if (SystemUtils.IS_OS_MAC) {
+			PLATFORM = Platform.MAC;
+		} else 
+			if (SystemUtils.IS_OS_UNIX) {
+			PLATFORM = Platform.UNIX;
+		} else {
+			PLATFORM = Platform.WIN;
+		}
 		launch(args);
 	}
 	
